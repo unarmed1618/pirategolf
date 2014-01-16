@@ -10,7 +10,7 @@ app.use(logfmt.requestLogger());
 app.get('/', function(req, res) {
 	res.send('Hello World!');
     });
-app.get('/read' function(req, res) {
+app.get('/read', function(req, res) {
 	res.send('A Reader will go here');
     });
 

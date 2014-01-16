@@ -17,8 +17,8 @@ app.get('/', function(req, res) {
 app.get('/read', function(req, res) {
 	
 	//	res.send('A Reader will go here');
-	var data = client.query('SELECT * FROM GolfRounds'));
-	res.send(data));
+	var data = client.query('SELECT * FROM GolfRounds');
+	res.send(data);
 
     });
 

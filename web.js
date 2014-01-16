@@ -21,7 +21,7 @@ app.get('/read', function(req, res) {
 	var strung = "";
 	query.on('row', function(row) {
 		strung.append(row);
-	    }
+	    });
 
 	res.send(row);
 

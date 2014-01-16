@@ -30,11 +30,11 @@ app.listen(port, function() {
 	console.log("Listening on " + port);
     });
 
-pg.connect(conString, function(err ,client) {
+//pg.connect(conString, function(err ,client) {
 	//	if(err) throw err;
-	var query = client.query('SELECT * FROM GolfRounds');
+	//var query = client.query('SELECT * FROM GolfRounds');
 	
-	query.on('row', function(row) {
-		console.log(JSON.stringify(row));
-	    });
+//	query.on('row', function(row) {
+//		console.log(JSON.stringify(row));
+//	    });
     });

@@ -18,13 +18,11 @@ app.get('/read', function(req, res) {
 	
 	//	res.send('A Reader will go here');
 	var query = client.query('SELECT * FROM GolfRounds');
-	var strung = "";
+	
 	query.on('row', function(row) {
-		strung.append(row);
+		res.send(JSON.stringify(row));
 	    });
-
-	res.send(row);
-
+	
     });
 
 var port = process.env.PORT || 5000;

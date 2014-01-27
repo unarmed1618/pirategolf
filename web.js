@@ -11,7 +11,7 @@ client.connect();
 
 
 var app = express();
-var insertion_form = forms.create({
+/*var insertion_form = forms.create({
 	player: fields.string({required: true}),
 	course: fields.string({required: true}),
 	tournament: fields.string(),
@@ -30,7 +30,10 @@ var insertion_form = forms.create({
 	updownbunker: fields.string({validators: [validators.maxlength(1)]}),
 	updowninout: fields.number()
     });
-	
+*/
+var insertion_form = forms.create({
+	username: fields.string();
+    });
 
 app.use(logfmt.requestLogger());
 

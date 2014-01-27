@@ -20,7 +20,7 @@ app.get('/read', function(req, res) {
 	var query = client.query('SELECT * FROM GolfRounds');
 	
 	query.on('row', function(row) {
-		buff = (buff + JSON.stringify(row));
+		buff = (buff.."\n".. JSON.stringify(row));
 	    });
 	res.send(buff);
 	

@@ -25,9 +25,12 @@ app.get('/readall', function(req, res) {
 	var buff = "";
 	//	res.send('A Reader will go here');
 	var query = client.query('SELECT * FROM GolfRounds', function(err, result) {
-		res.send(JSON.stringify(result));
+		for(var i in result.rows) { 
+		    buff += JSON.stringify(result.rows[i]);
+		    buff += ", ";
+		}
 	    });
-	
+	res.send(buff);
     });
 app.get('/write', function(req, res) {
     

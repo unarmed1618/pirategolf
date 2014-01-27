@@ -22,15 +22,17 @@ app.get('/read', function(req, res) {
 
     });
 app.get('/readall', function(req, res) {
-	var buff = "";
+	
 	//	res.send('A Reader will go here');
 	var query = client.query('SELECT * FROM GolfRounds', function(err, result) {
+		var buff = " ";
 		for(var i in result.rows) { 
 		    buff += JSON.stringify(result.rows[i]);
 		    buff += ", ";
 		}
-	    });
-	res.send(buff);
+		res.send(buff);	
+    });
+	
     });
 app.get('/write', function(req, res) {
     

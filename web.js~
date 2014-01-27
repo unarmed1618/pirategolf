@@ -17,7 +17,7 @@ var insertion_form = forms.create({
 	tournament: fields.string(),
 	practice: fields.boolean({required:true}),
 	hole: fields.number({required:true}),
-	score: fields.number({required:true})
+	score: fields.number({required:true}),
 	// });
 		fairway: fields.string({required:true, validators: [validators.maxlength(1)]}),
 	goposition: fields.string({validators: [validators.maxlength(1)]}),

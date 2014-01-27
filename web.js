@@ -18,8 +18,7 @@ var insertion_form = forms.create({
 	practice: fields.boolean({required:true}),
 	hole: fields.number({required:true}),
 	score: fields.number({required:true}),
-	// });
-		fairway: fields.string({required:true, validators: [validators.maxlength(1)]}),
+	fairway: fields.string({required:true, validators: [validators.maxlength(1)]}),
 	goposition: fields.string({validators: [validators.maxlength(1)]}),
 	wedgereg: fields.string({validators: [validators.maxlength(1)]}),
 	wedgedist: fields.number(),
@@ -40,8 +39,9 @@ app.use(logfmt.requestLogger());
 
 
 app.get('/add', function(req,res) {
-	res.send(insertion_form.toHTML());
+	res.send(insertion_form.toHTML()+ '<button type= "button">Submit</button>');
 	//	res.send('an Insertion form will go here'); 
+	
     });
 
 

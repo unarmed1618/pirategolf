@@ -17,7 +17,7 @@ app.get('/', function(req, res) {
 app.get('/read', function(req, res) {
 	var query = client.query('SELECT * FROM GolfRounds');
 	query.on('row', function(row) {
-		res.send(JSON.stringify(row);
+		res.send(JSON.stringify(row));
 			 });
 
     });

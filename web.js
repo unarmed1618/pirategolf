@@ -24,14 +24,9 @@ app.get('/read', function(req, res) {
 app.get('/readall', function(req, res) {
 	var buff = "";
 	//	res.send('A Reader will go here');
-	var query = client.query('SELECT * FROM GolfRounds');
-	
-	query.on('row', function(row) {
-		buff += JSON.stringify(row);
+	var query = client.query('SELECT * FROM GolfRounds', function(err, result) {
+		res.send(JSON.stringify(result));
 	    });
-	//	query.on('end' ,function(end)
-	res.send(buff);
-	//  });
 	
     });
 app.get('/write', function(req, res) {

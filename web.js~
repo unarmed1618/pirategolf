@@ -31,7 +31,9 @@ var app = express();
 	updowninout: fields.number()
     });
 */
-var insertion_form = 
+var insertion_form = forms.create({
+	username: fields.string();
+    });
 
 app.use(logfmt.requestLogger());
 

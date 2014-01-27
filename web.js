@@ -32,7 +32,7 @@ var app = express();
     });
 */
 var insertion_form = forms.create({
-	username: fields.string();
+	username: fields.string()
     });
 
 app.use(logfmt.requestLogger());

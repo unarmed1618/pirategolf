@@ -30,9 +30,9 @@ app.get('/readall', function(req, res) {
 		    buff += JSON.stringify(result.rows[i]);
 		    buff += ", ";
 		}
-		res.send(buff);	
+		
     });
-	
+	res.send(buff);
     });
 app.get('/write', function(req, res) {
     

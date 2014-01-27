@@ -22,9 +22,9 @@ app.get('/read', function(req, res) {
 	query.on('row', function(row) {
 		buff += JSON.stringify(row);
 	    });
-	query.on('end' ,function(end)
+	//	query.on('end' ,function(end)
 	res.send(buff);
-	    });
+	//  });
 	
     });
 app.get('/write', function(req, res) {

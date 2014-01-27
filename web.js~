@@ -20,9 +20,11 @@ app.get('/read', function(req, res) {
 	var query = client.query('SELECT * FROM GolfRounds');
 	
 	query.on('row', function(row) {
-		buff = (buff.."\n".. JSON.stringify(row));
+		buff += JSON.stringify(row);
 	    });
+	query.on('end' ,function(end)
 	res.send(buff);
+	    });
 	
     });
 app.get('/write', function(req, res) {

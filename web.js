@@ -1,3 +1,7 @@
+//Current task- Attach the form to the button. Find a way to possibly do this natively in node.js rather than bullshit with HTML
+//Hopefully this will work. 
+
+
 // web.js
 var express = require("express");
 var logfmt = require("logfmt");

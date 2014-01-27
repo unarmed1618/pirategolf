@@ -18,8 +18,8 @@ var insertion_form = forms.create({
 	practice: fields.boolean({required:true}),
 	hole: fields.number({required:true}),
 	score: fields.number({required:true})
-    });
-	/*	fairway: fields.string({required:true, validators: [validators.maxlength(1)]}),
+	// });
+		fairway: fields.string({required:true, validators: [validators.maxlength(1)]}),
 	goposition: fields.string({validators: [validators.maxlength(1)]}),
 	wedgereg: fields.string({validators: [validators.maxlength(1)]}),
 	wedgedist: fields.number(),
@@ -30,7 +30,7 @@ var insertion_form = forms.create({
 	updownsuccess: fields.string({validators: [validators.maxlength(1)]}),
 	updownbunker: fields.string({validators: [validators.maxlength(1)]}),
 	updowninout: fields.number()
-	}); */
+	}); 
 
 //var insertion_form = forms.create({
 //	username: fields.string()

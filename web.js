@@ -15,6 +15,13 @@ app.get('/', function(req, res) {
 	res.send('Hello World!');
     });
 app.get('/read', function(req, res) {
+	var query = client.query('SELECT * FROM GolfRounds');
+	query.on('row', function(row) {
+		res.send(JSON.stringify(row);
+			 });
+
+    });
+app.get('/readall', function(req, res) {
 	var buff = "";
 	//	res.send('A Reader will go here');
 	var query = client.query('SELECT * FROM GolfRounds');

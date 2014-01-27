@@ -24,11 +24,19 @@ app.get('/read', function(req, res) {
 	    });
 	
     });
+app.get('/write', function(req, res) {
+    
+	res.send('A write page will go here');
 
+
+});
 var port = process.env.PORT || 5000;
 app.listen(port, function() {
 	console.log("Listening on " + port);
     });
+
+
+
 
 //pg.connect(conString, function(err ,client) {
 	//	if(err) throw err;
@@ -37,4 +45,4 @@ app.listen(port, function() {
 //	query.on('row', function(row) {
 //		console.log(JSON.stringify(row));
 //	    });
-    });
+//    });

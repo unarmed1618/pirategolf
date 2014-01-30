@@ -67,8 +67,17 @@ app.get('/add', function(req,res) {
 
 
 // A hello world index stub
+
 app.get('/', function(req, res) {
-	res.send('Hello World!');
+	// You can also generate content this way- I'm planning to create some formatting functions and shit for when we need to make pretty stuff.
+	res.writeHead(200, { 'Content-Type': 'text/html' });
+	res.write('<!DOCTYPE html><html lang="en"><head>');
+	res.write('<meta charset="utf-8">');
+	res.write('<title>' + 'Some words' + '</title>');
+	res.write('</head><body>');
+	res.write('<h1><tt>' + 'more words' + '</tt></h1>');
+	res.write('</body></html>');
+	res.end();
     });
 
 // Pulls up the first file in the database for testing purposes

@@ -1,4 +1,12 @@
+//Current task- Attach the form to the button. Find a way to possibly do this natively in node.js rather than bullshit with HTML
+//Hopefully this will work. 
+//Current override task- generate comments for everyone else to understand
+
+
 // web.js
+
+
+
 var express = require("express");
 var logfmt = require("logfmt");
 var pg = require("pg");
@@ -31,9 +39,6 @@ var insertion_form = forms.create({
 	updowninout: fields.number()
 	}); 
 
-//var insertion_form = forms.create({
-//	username: fields.string()
-//    });
 
 app.use(logfmt.requestLogger());
 

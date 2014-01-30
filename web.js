@@ -9,13 +9,13 @@
 // This section necessary to declare plugins/extensions
 var express = require("express");
 var logfmt = require("logfmt");
-var pg = require("pg");
+var pg = require("pg").native;
 var forms = require("forms");
 // Plugin Declarations complete
-var params = { host: 'ec2-184-73-194-196.compute-1.amazonaws.com' , user: 'zfaagftogdvhjz', password: 'pcXlJD1bP9AygIM7ivINuDOHvS', database: 'dfcvk500ed0il4', ssl: true }
+var params = { host: 'ec2-184-73-194-196.compute-1.amazonaws.com' , user: 'zfaagftogdvhjz', password: 'pcXlJD1bP9AygIM7ivINuDOHvS', database: 'dfcvk500ed0il4', ssl: false }
 // Local variables necessary for plugins
 // String for connecting to the database so it can be changed if necessary-
-var conString = "postgres://zfaagftogdvhjz:pcXlJD1bP9AygIM7ivINuDOHvS@ec2-184-73-194-196.compute-1.amazonaws.com:5432/dfcvk500ed0il4";
+//var conString = "postgres://zfaagftogdvhjz:pcXlJD1bP9AygIM7ivINuDOHvS@ec2-184-73-194-196.compute-1.amazonaws.com:5432/dfcvk500ed0il4";
 // Client instatiation
 var client = new pg.Client(params);
 //Forms hooks

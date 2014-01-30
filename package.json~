@@ -1,6 +1,9 @@
 {
   "name": "golfworkspace",
   "version": "0.0.0",
+  "engines": {
+  "node": "0.10.24"
+},
   "description": "A webapp to handle the golfers database",
   "main": "web.js",
   "scripts": {
@@ -13,7 +16,7 @@
   "author": "John Darrow",
   "license": "ISC",
   "dependencies": {
-    "pg": "0.6.15",
+    "pg": "0.8.8",
     "logfmt": "~0.18.1",
     "express": "~3.4.8"
   }

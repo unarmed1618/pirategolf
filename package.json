@@ -16,7 +16,7 @@
   "author": "John Darrow",
   "license": "ISC",
   "dependencies": {
-    "pg": "0.8.8",
+    "pg": "2.11.1",
     "logfmt": "~0.18.1",
     "express": "~3.4.8"
   }

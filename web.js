@@ -1,6 +1,6 @@
 //Current task- Attach the form to the button. Find a way to possibly do this natively in node.js rather than bullshit with HTML
 //Hopefully this will work. 
-//Current override task- generate comments for everyone else to understand
+//
 
 
 // web.js -- Filename 
@@ -12,12 +12,12 @@ var logfmt = require("logfmt");
 var pg = require("pg");
 var forms = require("forms");
 // Plugin Declarations complete
-
+var params = { host: 'ec2-184-73-194-196.compute-1.amazonaws.com' , user: 'zfaagftogdvhjz', password: 'pcXlJD1bP9AygIM7ivINuDOHvS', database: 'dfcvk500ed0il4', ssl: true }
 // Local variables necessary for plugins
 // String for connecting to the database so it can be changed if necessary-
 var conString = "postgres://zfaagftogdvhjz:pcXlJD1bP9AygIM7ivINuDOHvS@ec2-184-73-194-196.compute-1.amazonaws.com:5432/dfcvk500ed0il4";
 // Client instatiation
-var client = new pg.Client(conString);
+var client = new pg.Client(params);
 //Forms hooks
 var fields = forms.fields, validators = forms.validators;
 
@@ -58,6 +58,7 @@ app.use(logfmt.requestLogger()); //logfmt hook
 // res.send is the function that builds the response
 
 
+
 app.get('/add', function(req,res) {
 	res.send(insertion_form.toHTML()+ '<button type= "button">Submit</button>');
 	//	Builds the form
@@ -92,7 +93,7 @@ app.get('/read', function(req, res) {
 app.get('/readall', function(req, res) {
 	
 	//	res.send('A Reader will go here');
-	var query = client.query('SELECT * FROM GolfRounds', function(err, result) {
+	var query = client.query('SELECT * FROM GolfRounds', function(err, result) { 
 		//Appends all rows recieved in 'result' to the buffer
 		for(var i in result.rows) { 
 		    buff += JSON.stringify(result.rows[i]);
@@ -103,10 +104,12 @@ app.get('/readall', function(req, res) {
 	res.send(buff); //responds with the filled buffer
     });
 // a stub for a posting page
-app.get('/write', function(req, res) {
-    
+app.get('/write/', function(req, res) {
+	var r = req.query;
+	// forming the query manually for now
+	var query = client.query('INSERT INTO GolfRounds VALUES (' + r.player + ',' + r.course + ',' +  r.tournament + ',' + r.practice + ',' + r.hole + ',' + r.score +',' + r.fairway  + ',' + r.goposition + ',' + r.wedgereg + ',' + r.wedgedist + ','+ r.wedgerough + ',' + r.wedgerough + ',' + r.greeninout + ',' + r.greenletter + ',' + r.putts + ',' + r.updownsuccess + ',' + r.updownbunker + ',' + r.updowninout + ')');
 	res.send('A write page will go here');
-
+	
 
 });
 

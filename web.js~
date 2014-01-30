@@ -1,6 +1,6 @@
 //Current task- Attach the form to the button. Find a way to possibly do this natively in node.js rather than bullshit with HTML
 //Hopefully this will work. 
-//Current override task- generate comments for everyone else to understand
+//
 
 
 // web.js -- Filename 
@@ -9,7 +9,7 @@
 // This section necessary to declare plugins/extensions
 var express = require("express");
 var logfmt = require("logfmt");
-var pg = require("pg");
+var pg = require("pg").native;
 var forms = require("forms");
 // Plugin Declarations complete
 
@@ -58,6 +58,7 @@ app.use(logfmt.requestLogger()); //logfmt hook
 // res.send is the function that builds the response
 
 
+
 app.get('/add', function(req,res) {
 	res.send(insertion_form.toHTML()+ '<button type= "button">Submit</button>');
 	//	Builds the form
@@ -67,8 +68,17 @@ app.get('/add', function(req,res) {
 
 
 // A hello world index stub
+
 app.get('/', function(req, res) {
-	res.send('Hello World!');
+	// You can also generate content this way- I'm planning to create some formatting functions and shit for when we need to make pretty stuff.
+	res.writeHead(200, { 'Content-Type': 'text/html' });
+	res.write('<!DOCTYPE html><html lang="en"><head>');
+	res.write('<meta charset="utf-8">');
+	res.write('<title>' + 'Some words' + '</title>');
+	res.write('</head><body>');
+	res.write('<h1><tt>' + 'more words' + '</tt></h1>');
+	res.write('</body></html>');
+	res.end();
     });
 
 // Pulls up the first file in the database for testing purposes
@@ -83,7 +93,7 @@ app.get('/read', function(req, res) {
 app.get('/readall', function(req, res) {
 	
 	//	res.send('A Reader will go here');
-	var query = client.query('SELECT * FROM GolfRounds', function(err, result) {
+	var query = client.query('SELECT * FROM GolfRounds', function(err, result) { 
 		//Appends all rows recieved in 'result' to the buffer
 		for(var i in result.rows) { 
 		    buff += JSON.stringify(result.rows[i]);
@@ -94,10 +104,12 @@ app.get('/readall', function(req, res) {
 	res.send(buff); //responds with the filled buffer
     });
 // a stub for a posting page
-app.get('/write', function(req, res) {
-    
+app.get('/write/', function(req, res) {
+	var r = req.query;
+	// forming the query manually for now
+	var query = client.query('INSERT INTO GolfRounds VALUES (' + r.player + ',' + r.course + ',' +  r.tournament + ',' + r.practice + ',' + r.hole + ',' + r.score +',' + r.fairway  + ',' + r.goposition + ',' + r.wedgereg + ',' + r.wedgedist + ','+ r.wedgerough + ',' + r.wedgerough + ',' + r.greeninout + ',' + r.greenletter + ',' + r.putts + ',' + r.updownsuccess + ',' + r.updownbunker + ',' + r.updowninout + ')');
 	res.send('A write page will go here');
-
+	
 
 });
 

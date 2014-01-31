@@ -12,11 +12,12 @@
 var util = require("util");
 var express = require("express");
 var logfmt = require("logfmt");
+var fs = require('fs');
+var jade = require('jade');
+var jadeTemplate = fs.readFileSync('page.jade').toString();
+var fn = jade.compile(jadeTemplate);
 var pg = require("pg").native;
 var forms = require("forms");
-var jsont = require("jsont");
-var template = require("./my-template.json");
-var options = {};
 
 // Plugin Declarations complete
 
@@ -28,9 +29,6 @@ var conString = "postgres://zfaagftogdvhjz:pcXlJD1bP9AygIM7ivINuDOHvS@ec2-184-73
 var client = new pg.Client(conString);
 //Forms hooks
 var fields = forms.fields, validators = forms.validators;
-//Jsont stuff
-jsont.render(template, options, function(err, out) {
-	console.log(out)  });
 
 
 
@@ -70,6 +68,13 @@ app.use(logfmt.requestLogger()); //logfmt hook
 // res.send is a function that builds the response
 
 
+app.configure(function() {
+	app.set('views', __dirname);
+	app.set('view engine', 'jade');
+
+	app.use(express.bodyParser());
+	app.use(app.router);
+    });
 
 app.get('/add', function(req,res) {
 	insertion_form.handle(req, {
@@ -89,7 +94,12 @@ app.get('/add', function(req,res) {
 		    res.end('<pre>' + util.inspect(form.data) + '</pre>'+ form.data.player);},                                                                                 
 		    
 		    other: function(form) {
-		    res.send('<form action= "", method="GET" >'+insertion_form.toHTML()+ '<input type= "submit" value="Submit"/></form>');
+		    res.send(fn({
+			    locals: {
+				    title: 'Adding A Score',
+					form: insertion_form.toHTML()
+					} }));
+
 
 		}
 	    });       

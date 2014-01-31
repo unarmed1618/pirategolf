@@ -1,4 +1,6 @@
-//Current task- Attach the form to the button. Find a way to possibly do this natively in node.js rather than bullshit with HTML
+//Form now posts successfully to the database
+//Tasks- User Tables, User login functionality, etc, (Probably available as a drop-in)
+// - Everything else
 //Hopefully this will work. 
 //
 
@@ -7,17 +9,18 @@
 
 
 // This section necessary to declare plugins/extensions
+var util = require("util");
 var express = require("express");
 var logfmt = require("logfmt");
 var pg = require("pg").native;
 var forms = require("forms");
 // Plugin Declarations complete
-var params = { host: 'ec2-184-73-194-196.compute-1.amazonaws.com' , user: 'zfaagftogdvhjz', password: 'pcXlJD1bP9AygIM7ivINuDOHvS', database: 'dfcvk500ed0il4', ssl: false }
+
 // Local variables necessary for plugins
 // String for connecting to the database so it can be changed if necessary-
-//var conString = "postgres://zfaagftogdvhjz:pcXlJD1bP9AygIM7ivINuDOHvS@ec2-184-73-194-196.compute-1.amazonaws.com:5432/dfcvk500ed0il4";
+var conString = "postgres://zfaagftogdvhjz:pcXlJD1bP9AygIM7ivINuDOHvS@ec2-184-73-194-196.compute-1.amazonaws.com:5432/dfcvk500ed0il4";
 // Client instatiation
-var client = new pg.Client(params);
+var client = new pg.Client(conString);
 //Forms hooks
 var fields = forms.fields, validators = forms.validators;
 
@@ -33,7 +36,7 @@ var insertion_form = forms.create({
 	player: fields.string({required: true}),
 	course: fields.string({required: true}),
 	tournament: fields.string(),
-	practice: fields.boolean({required:true}),
+	practice: fields.boolean(),
 	hole: fields.number({required:true}),
 	score: fields.number({required:true}),
 	fairway: fields.string({required:true, validators: [validators.maxlength(1)]}),
@@ -41,7 +44,7 @@ var insertion_form = forms.create({
 	wedgereg: fields.string({validators: [validators.maxlength(1)]}),
 	wedgedist: fields.number(),
 	wedgerough: fields.string({validators: [validators.maxlength(1)]}),
-	greeninout: fields.string({validators: [validators.maxlength(1)]}),
+	greeninout: fields.number(),//fields.string({validators: [validators.maxlength(1)]}),
 	greenletter: fields.string({validators: [validators.maxlength(1)]}),
 	putts: fields.number(),
 	updownsuccess: fields.string({validators: [validators.maxlength(1)]}),
@@ -55,12 +58,34 @@ app.use(logfmt.requestLogger()); //logfmt hook
 //This is called at pirategolf.heroku.com/add
 // req == the request's parameters
 // res == the response
-// res.send is the function that builds the response
+// res.send is a function that builds the response
 
 
 
 app.get('/add', function(req,res) {
-	res.send(insertion_form.toHTML()+ '<button type= "button">Submit</button>');
+	insertion_form.handle(req, {
+		success: function (form) {
+		    // there is a request and the form is valid                                                                              
+		    // form.data contains the submitted data                                                                                 
+		    var practiceCaster;
+		    if(form.data.practice)
+			practiceCaster=1;
+		    else
+			practiceCaster=0;
+		    res.writeHead(200, {'Content-Type': 'text/html'});
+		    res.write('<h1>Success!</h1>');
+		    client.query('INSERT INTO GolfRounds VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)',[form.data.player ,  form.data.course , form.data.tournament , practiceCaster , form.data.hole , form.data.score , form.data.fairway  , form.data.goposition , form.data.wedgereg , form.data.wedgedist , form.data.wedgerough , form.data.greeninout , form.data.greenletter, form.data.putts , form.data.updownsuccess , form.data.updownbunker , form.data.updowninout], function(err, result){
+						    if (err) throw err;                                                                     
+			    res.write('posted');   });    
+		    res.end('<pre>' + util.inspect(form.data) + '</pre>'+ form.data.player);},                                                                                 
+		    
+		    other: function(form) {
+		    res.send('<form action= "", method="GET" >'+insertion_form.toHTML()+ '<input type= "submit" value="Submit"/></form>');
+
+		}
+	    });       
+
+	
 	//	Builds the form
 	
     });
@@ -81,37 +106,25 @@ app.get('/', function(req, res) {
 	res.end();
     });
 
-// Pulls up the first file in the database for testing purposes
+
 // TODO: Make this respond to req params and build a query.
-app.get('/read', function(req, res) {
-	var query = client.query('SELECT * FROM GolfRounds'); //Builds and sends the actual sql query
-	query.on('row', function(row) { // Event function for row behavior
-		res.send(JSON.stringify(row)); //Puts the row into a string and sends it as a response
-			 });
-    });
 //Pulls all files in the golfrounds table.
 app.get('/readall', function(req, res) {
-	
+	//	buff = "Database:";
 	//	res.send('A Reader will go here');
+	res.writeHead(200, { 'Content-Type': 'text/html' });
 	var query = client.query('SELECT * FROM GolfRounds', function(err, result) { 
 		//Appends all rows recieved in 'result' to the buffer
+		//res.writeHead(200, { 'Content-Type': 'text/html' });
 		for(var i in result.rows) { 
-		    buff += JSON.stringify(result.rows[i]);
-		    buff += ", ";
+		    res.write( JSON.stringify(result.rows[i]));
+		    
 		}
 		
     });
-	res.send(buff); //responds with the filled buffer
+	res.end(); //responds with the filled buffer
     });
-// a stub for a posting page
-app.get('/write/', function(req, res) {
-	var r = req.query;
-	// forming the query manually for now
-	var query = client.query('INSERT INTO GolfRounds VALUES (' + r.player + ',' + r.course + ',' +  r.tournament + ',' + r.practice + ',' + r.hole + ',' + r.score +',' + r.fairway  + ',' + r.goposition + ',' + r.wedgereg + ',' + r.wedgedist + ','+ r.wedgerough + ',' + r.wedgerough + ',' + r.greeninout + ',' + r.greenletter + ',' + r.putts + ',' + r.updownsuccess + ',' + r.updownbunker + ',' + r.updowninout + ')');
-	res.send('A write page will go here');
-	
 
-});
 
 // Don't mess with this stuff
 var port = process.env.PORT || 5000;

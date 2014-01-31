@@ -14,15 +14,24 @@ var express = require("express");
 var logfmt = require("logfmt");
 var pg = require("pg").native;
 var forms = require("forms");
+var jsont = require("jsont")();
+var template = require("./my-template.json");
+var options = {};
+
 // Plugin Declarations complete
 
 // Local variables necessary for plugins
 // String for connecting to the database so it can be changed if necessary-
+
 var conString = "postgres://zfaagftogdvhjz:pcXlJD1bP9AygIM7ivINuDOHvS@ec2-184-73-194-196.compute-1.amazonaws.com:5432/dfcvk500ed0il4";
 // Client instatiation
 var client = new pg.Client(conString);
 //Forms hooks
 var fields = forms.fields, validators = forms.validators;
+//Jsont stuff
+jsont.render(template, options, function(err, out) {
+	console.log(out)  });
+
 
 
 var buff = "Database:"; // For a string to append a full read to
@@ -75,7 +84,7 @@ app.get('/add', function(req,res) {
 		    res.writeHead(200, {'Content-Type': 'text/html'});
 		    res.write('<h1>Success!</h1>');
 		    client.query('INSERT INTO GolfRounds VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)',[form.data.player ,  form.data.course , form.data.tournament , practiceCaster , form.data.hole , form.data.score , form.data.fairway  , form.data.goposition , form.data.wedgereg , form.data.wedgedist , form.data.wedgerough , form.data.greeninout , form.data.greenletter, form.data.putts , form.data.updownsuccess , form.data.updownbunker , form.data.updowninout], function(err, result){
-						    if (err) throw err;                                                                     
+			    if (err) throw err;                            
 			    res.write('posted');   });    
 		    res.end('<pre>' + util.inspect(form.data) + '</pre>'+ form.data.player);},                                                                                 
 		    
@@ -132,6 +141,13 @@ app.get('/readall', function(req, res) {
        
     });
 
+app.get('/edit', function(req,res) {
+	res.send("Stub. Need an editor page");
+	// Edit can manage Deletions, updates, and etc.
+	//Just need to actually build it/ find one.
+
+
+    });
 
 // Don't mess with this stuff
 var port = process.env.PORT || 5000;

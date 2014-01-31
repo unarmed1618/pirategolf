@@ -105,8 +105,15 @@ app.get('/', function(req, res) {
 	res.write('</body></html>');
 	res.end();
     });
-
-
+/*
+app.get('/read',function(req,res) {
+var query = client.query('SELECT 1 FROM GolfRounds');
+        query.on('row', function(row) {
+                res.send(JSON.stringify(row));
+	    });
+	
+    });
+*/
 // TODO: Make this respond to req params and build a query.
 //Pulls all files in the golfrounds table.
 app.get('/readall', function(req, res) {
@@ -120,9 +127,9 @@ app.get('/readall', function(req, res) {
 		    res.write( JSON.stringify(result.rows[i]));
 		    
 		}
-		
+		res.end(); //responds with the filled buffer	
     });
-	res.end(); //responds with the filled buffer
+       
     });
 
 

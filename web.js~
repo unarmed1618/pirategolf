@@ -1,4 +1,6 @@
-//Current task- Attach the form to the button. Find a way to possibly do this natively in node.js rather than bullshit with HTML
+//Form now posts successfully to the database
+//Tasks- User Tables, User login functionality, etc, (Probably available as a drop-in)
+// - Everything else
 //Hopefully this will work. 
 //
 
@@ -13,7 +15,7 @@ var logfmt = require("logfmt");
 var pg = require("pg").native;
 var forms = require("forms");
 // Plugin Declarations complete
-//var params = { host: 'ec2-184-73-194-196.compute-1.amazonaws.com' , user: 'zfaagftogdvhjz', password: 'pcXlJD1bP9AygIM7ivINuDOHvS', database: 'dfcvk500ed0il4', ssl: false }
+
 // Local variables necessary for plugins
 // String for connecting to the database so it can be changed if necessary-
 var conString = "postgres://zfaagftogdvhjz:pcXlJD1bP9AygIM7ivINuDOHvS@ec2-184-73-194-196.compute-1.amazonaws.com:5432/dfcvk500ed0il4";
@@ -73,8 +75,7 @@ app.get('/add', function(req,res) {
 		    res.writeHead(200, {'Content-Type': 'text/html'});
 		    res.write('<h1>Success!</h1>');
 		    client.query('INSERT INTO GolfRounds VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)',[form.data.player ,  form.data.course , form.data.tournament , practiceCaster , form.data.hole , form.data.score , form.data.fairway  , form.data.goposition , form.data.wedgereg , form.data.wedgedist , form.data.wedgerough , form.data.greeninout , form.data.greenletter, form.data.putts , form.data.updownsuccess , form.data.updownbunker , form.data.updowninout], function(err, result){
-				 //		    var query = client.query('INSERT INTO GolfRounds VALUES (' + form.data.player + ',' + form.data.course + ',' +  form.data.tournament + ',' + practiceCaster + ',' + form.data.hole + ',' + form.data.score +',' + form.data.fairway  + ',' + form.data.goposition + ',' + form.data.wedgereg + ',' + form.data.wedgedist + ',' + form.data.wedgerough + ',' + form.data.greeninout + ',' + form.data.greenletter + ',' + form.data.putts + ',' + form.data.updownsuccess + ',' + form.data.updownbunker + ',' + form.data.updowninout + ')', function(err, result){
-			    if (err) throw err;                                                                     
+						    if (err) throw err;                                                                     
 			    res.write('posted');   });    
 		    res.end('<pre>' + util.inspect(form.data) + '</pre>'+ form.data.player);},                                                                                 
 		    
@@ -83,7 +84,7 @@ app.get('/add', function(req,res) {
 
 		}
 	    });       
-	//	res.send('<form action= "", method="GET" >'+insertion_form.toHTML()+ '<input type= "submit" value="Submit"/></form>');
+
 	
 	//	Builds the form
 	
@@ -105,14 +106,15 @@ app.get('/', function(req, res) {
 	res.end();
     });
 
-// Pulls up the first file in the database for testing purposes
+app.get('/read',function(req,res) {
+var query = client.query('SELECT 1 FROM GolfRounds');
+        query.on('row', function(row) {
+                res.send(JSON.stringify(row));
+	    });
+	
+    });
+
 // TODO: Make this respond to req params and build a query.
-//app.get('/read', function(req, res) {
-//	var query = client.query('SELECT * FROM GolfRounds'); //Builds and sends the actual sql query
-//	query.on('row', function(row) { // Event function for row behavior
-//		res.send(JSON.stringify(row)); //Puts the row into a string and sends it as a response
-//			 });
-//   });
 //Pulls all files in the golfrounds table.
 app.get('/readall', function(req, res) {
 	//	buff = "Database:";
@@ -125,26 +127,11 @@ app.get('/readall', function(req, res) {
 		    res.write( JSON.stringify(result.rows[i]));
 		    
 		}
-		
+		res.end(); //responds with the filled buffer	
     });
-	res.end(); //responds with the filled buffer
+       
     });
-// a stub for a posting page
-app.post('/write', function(req, res) {
 
-
-	    //}
-
-
-	//	player = JSON.stringify(req.body);
-	//	res.send("Data " +player);
-// forming the query manually for now
-	//	var query = client.query('INSERT INTO GolfRounds VALUES (' + req.body.player + ',' + req.body.course + ',' +  req.body.tournament + ',' + req.body.practice + ',' + req.body.hole + ',' + req.body.score +',' + req.body.fairway  + ',' + req.body.goposition + ',' + req.body.wedgereg + ',' + req.body.wedgedist + ','+ req.body.wedgerough + ',' + req.body.wedgerough + ',' + req.body.greeninout + ',' + req.body.greenletter + ',' + req.body.putts + ',' + req.body.updownsuccess + ',' + req.body.updownbunker + ',' + req.body.updowninout + ')', function(err, result){
-	//	console.log(player);
-	//	if (err) throw err;
-	//	res.redirect('/add');
-		//   });
-});
 
 // Don't mess with this stuff
 var port = process.env.PORT || 5000;

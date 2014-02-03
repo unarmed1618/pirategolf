@@ -1,7 +1,12 @@
-h1= title
- h2 something
-  - if (typeof form !== 'undefined')
-    form(method='get')
-      != form
-      input(type='submit')
+doctype html
+html
+ head
+  include includes/head
+ body
+  h1= title
+   h2 something
+    - if (typeof form !== 'undefined')
+      form(method='get')
+        != form
+        input(type='submit')
 

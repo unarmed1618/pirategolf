@@ -173,19 +173,25 @@ app.get('/readall', function(req, res) {
     });
        
     });
+
 //Designed to use Jade to clean up the output into a table
 app.get('/readjade',function(req,res) {
 	var rows = [];
 	var query = client.query('SELECT * FROM GolfRounds');
 	query.on('row', function(row){
-		rows.push(JSON.stringify(row));
+		rows.push(row);
 	    });
 	query.on('end', function(row){
 		res.send(jadeTable({"Result": {"rows": rows}}));
 	    });
     });
 
+app.get('/carouselForm', function(req,res){
+	res.send("Stub. Adding a carousel style form input for mobile users.");
 
+
+
+});
 app.get('/edit', function(req,res) {
 	//if(req.
 	res.send("Stub. Need an editor page");

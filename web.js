@@ -64,7 +64,7 @@ var insertion_form = forms.create({
 	updownbunker: fields.string({validators: [validators.maxlength(1)]}),
 	updowninout: fields.number()
 	}); 
-
+//var carousel_form =
 
 app.use(logfmt.requestLogger()); //logfmt hook
 
@@ -173,6 +173,7 @@ app.get('/readall', function(req, res) {
     });
        
     });
+
 //Designed to use Jade to clean up the output into a table
 app.get('/readjade',function(req,res) {
 	var rows = [];
@@ -185,7 +186,12 @@ app.get('/readjade',function(req,res) {
 	    });
     });
 
+app.get('/carouselForm', function(req,res){
+	res.send("Stub. Adding a carousel style form input for mobile users.");
 
+
+
+});
 app.get('/edit', function(req,res) {
 	//if(req.
 	res.send("Stub. Need an editor page");

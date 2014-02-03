@@ -1,0 +1,65 @@
+doctype html
+html
+ head 
+  include includes/head
+ body
+   //Do a form thing
+  div(id= "carousel-example-generic",class= "carousel slide", data-ride="carousel",pause=true, wrap=false)
+   ol.carousel-indicators
+    each input, i in formObject
+     if i == 0
+      li(data-target="#carousel-example-generic", data-slide-to=i,class="active")
+     else
+      li(data-target="#carousel-example-generic", data-slide-to=i)
+    
+   each input, i in formObject
+    div.carousel-inner
+     div.item.active
+      div.carousel-caption
+       input
+     //Controls
+    a(class="left carousel-control", href="#carousel-example-generic",data-slide="prev")
+     span.glyphicon.glyphicon-chevron-left
+    a(class="right carousel-control",href="#carousel-example-generic",data-slide="next")
+     span.glyphicon.glyphicon-chevron-right
+ //
+  table.table
+   tr 
+    th Player
+    th Course
+    th Tournament
+    th Practice?
+    th Hole
+    th Score
+    th Fairway?
+    th GoPosition
+    th WedgeReg
+    th WedgeDist
+    th WedgeRough
+    th GreenInOut
+    th GreenLetter
+    th Putts
+    th UpDownSuccess
+    th UpDownBunker
+    th UpDownInOut
+   each row, i in Result.rows
+    tr
+     td=row.player
+     td=row.course
+     td=row.tournament
+     td=row.practice
+     td=row.hole
+     td=row.score
+     td=row.fairway
+     td=row.goposition
+     td=row.wedgereg
+     td=row.wedgedist
+     td=row.wedgerough
+     td=row.greeninout
+     td=row.greenletter
+     td=row.putts
+     td=row.updownsuccess
+     td=row.updownbunker
+     td=row.updowninout
+    
+ 

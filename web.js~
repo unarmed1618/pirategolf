@@ -10,12 +10,18 @@
 
 // This section necessary to declare plugins/extensions
 var util = require("util");
+var jquery = require("jquery");
 var express = require("express");
 var logfmt = require("logfmt");
 var fs = require('fs');
+var jadeOptions = {filename: './', pretty:true };
 var jade = require('jade');
+var jadeTableBox = fs.readFileSync('table.jade').toString();
+var jadeTable = jade.compile(jadeTableBox, jadeOptions);
 var jadeTemplate = fs.readFileSync('page.jade').toString();
-var fn = jade.compile(jadeTemplate);
+var fn = jade.compile(jadeTemplate, jadeOptions);
+var jadeForm = fs.readFileSync('form.jade').toString();
+var jfm = jade.compile(jadeForm, jadeOptions);
 var pg = require("pg").native;
 var forms = require("forms");
 
@@ -95,10 +101,10 @@ app.get('/add', function(req,res) {
 		    
 		    other: function(form) {
 		    res.send(fn({
-			    locals: {
+			     
 				    title: 'Adding A Score',
 					form: insertion_form.toHTML()
-					} }));
+					 }));
 
 
 		}
@@ -109,7 +115,21 @@ app.get('/add', function(req,res) {
 	
     });
 
-
+app.get('/bootstrap.css', function(req,res) {
+        res.writeHead(200, {"Content-Type": "text/css"});
+        fs.readFile('./css/bootstrap.css' , 'utf8', function(err, fd) {
+                res.end(fd);
+            });
+    });
+app.get('/bootstrap.css.map',function(req,res) {
+        res.send(fs.readFileSync('css/bootstrap.css.map').toString());
+    });
+app.get('/bootstrap.js',function(req,res){
+        res.writeHead(200, {"Content-Type": "text/javascript"});
+        fs.readFile('js/bootstrap.js', 'utf8', function(err, fd) {
+                res.end(fd);
+            });
+    });
 
 // A hello world index stub
 
@@ -135,6 +155,9 @@ var query = client.query('SELECT 1 FROM GolfRounds');
 */
 // TODO: Make this respond to req params and build a query.
 //Pulls all files in the golfrounds table.
+
+
+
 app.get('/readall', function(req, res) {
 	//	buff = "Database:";
 	//	res.send('A Reader will go here');
@@ -150,14 +173,30 @@ app.get('/readall', function(req, res) {
     });
        
     });
+//Designed to use Jade to clean up the output into a table
+app.get('/readjade',function(req,res) {
+	var rows = [];
+	var query = client.query('SELECT * FROM GolfRounds');
+	query.on('row', function(row){
+		rows.push(JSON.stringify(row));
+	    });
+	query.on('end', function(row){
+		res.send(jadeTable({"Result": {"rows": rows}}));
+	    });
+    });
+
 
 app.get('/edit', function(req,res) {
+	//if(req.
 	res.send("Stub. Need an editor page");
 	// Edit can manage Deletions, updates, and etc.
 	//Just need to actually build it/ find one.
 
 
     });
+    //app.post('/edit', function(req,res) {
+	
+	//   });
 
 // Don't mess with this stuff
 var port = process.env.PORT || 5000;

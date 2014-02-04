@@ -16,6 +16,8 @@ var logfmt = require("logfmt");
 var fs = require('fs');
 var jadeOptions = {filename: './', pretty:true };
 var jade = require('jade');
+var jadeCarouselBox = fs.readFileSync('carousel.jade').toString();
+var jadeCarousel = jade.compile(jadeCarouselBox, jadeOptions);
 var jadeTableBox = fs.readFileSync('table.jade').toString();
 var jadeTable = jade.compile(jadeTableBox, jadeOptions);
 var jadeTemplate = fs.readFileSync('page.jade').toString();
@@ -130,6 +132,16 @@ app.get('/bootstrap.js',function(req,res){
                 res.end(fd);
             });
     });
+app.get('/docs.js',function(req,res){
+	res.writeHead(200, {"Content-Type": "text/javascript"});
+	fs.readFile('js/docs.min.js', 'utf8' ,function(err, fd) {
+		res.end(fd);
+	    });
+    });
+app.get('/fonts/glyphicons-halflings-regular.woff',function(req,res){
+	res.send(fs.readFileSync('fonts/glyphicons-halflings-regular.woff'))
+	    });
+//app.get('/
 
 // A hello world index stub
 
@@ -157,7 +169,10 @@ var query = client.query('SELECT 1 FROM GolfRounds');
 //Pulls all files in the golfrounds table.
 
 
+app.get('/formtest', function(req,res) {
+	res.send(JSON.stringify(insertion_form));
 
+    });
 app.get('/readall', function(req, res) {
 	//	buff = "Database:";
 	//	res.send('A Reader will go here');
@@ -187,8 +202,8 @@ app.get('/readjade',function(req,res) {
     });
 
 app.get('/carouselForm', function(req,res){
-	res.send("Stub. Adding a carousel style form input for mobile users.");
-
+	//res.send("Stub. Adding a carousel style form input for mobile users.");
+	res.send(jadeCarousel({"fields": [{"name": "This"},{"name": "is"},{"name":"a"},{"name":"test."}]}));
 
 
 });

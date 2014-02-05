@@ -203,8 +203,8 @@ app.get('/readjade',function(req,res) {
 
 app.get('/carouselForm', function(req,res){
 	//res.send("Stub. Adding a carousel style form input for mobile users.");
-	res.send(jadeCarousel({"fields": [{"name": "This"},{"name": "is"},{"name":"a"},{"name":"test."}]}));
-
+	//res.send(jadeCarousel({"fields": [{"name": "This"},{"name": "is"}]}));
+	res.send(jadeCarousel(insertion_form));
 
 });
 app.get('/edit', function(req,res) {

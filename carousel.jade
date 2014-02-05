@@ -5,29 +5,31 @@ html(lang="en")
   title Carousel of Forms
  body
   //Carousel
-  div(id= "myCarousel",class= "carousel slide", data-ride="carousel")
+  //form
+  div(id= "myCarousel",class= "carousel slide", data-ride="carousel",data-interval=0)
    //Indicators
    ol.carousel-indicators
     each field, i in fields
-     if i == 0
+     if i == "player"
       li(data-target="#myCarousel", data-slide-to=i,class="active")
      else
       li(data-target="#myCarousel", data-slide-to=i)
    div.carousel-inner 
     each field, i in fields
-     if(i == 0)
+     if(i == "player")
       div.item.active
-       img(data-src="holder.js/480x800/auto/#777:#7a7a7a/text:First slide",alt="First Slide")
+       img(data-src="holder.js/480x800/auto/#777:#7a7a7a/text:"+ i,alt="First Slide")
        div.container
         div.carousel-caption
          h1=field.name
      else
       div.item
-       img(data-src="holder.js/480x800/auto/#777:#7a7a7a/text:Slide #" +i, alt="Slide #" +i)
+       img(data-src="holder.js/480x800/auto/#777:#7a7a7a/text:" +i, alt=i)
        div.container
         div.carousel-caption
          h1=field.name
-     //Controls
+           
+   //Controls
    a(class="left carousel-control", href="#myCarousel",data-slide="prev")
     span.glyphicon.glyphicon-chevron-left
    a(class="right carousel-control",href="#myCarousel",data-slide="next")

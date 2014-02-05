@@ -10,12 +10,20 @@
 
 // This section necessary to declare plugins/extensions
 var util = require("util");
+var jquery = require("jquery");
 var express = require("express");
 var logfmt = require("logfmt");
 var fs = require('fs');
+var jadeOptions = {filename: './', pretty:true };
 var jade = require('jade');
+var jadeCarouselBox = fs.readFileSync('carousel.jade').toString();
+var jadeCarousel = jade.compile(jadeCarouselBox, jadeOptions);
+var jadeTableBox = fs.readFileSync('table.jade').toString();
+var jadeTable = jade.compile(jadeTableBox, jadeOptions);
 var jadeTemplate = fs.readFileSync('page.jade').toString();
-var fn = jade.compile(jadeTemplate);
+var fn = jade.compile(jadeTemplate, jadeOptions);
+var jadeForm = fs.readFileSync('form.jade').toString();
+var jfm = jade.compile(jadeForm, jadeOptions);
 var pg = require("pg").native;
 var forms = require("forms");
 
@@ -58,7 +66,7 @@ var insertion_form = forms.create({
 	updownbunker: fields.string({validators: [validators.maxlength(1)]}),
 	updowninout: fields.number()
 	}); 
-
+//var carousel_form =
 
 app.use(logfmt.requestLogger()); //logfmt hook
 
@@ -95,10 +103,10 @@ app.get('/add', function(req,res) {
 		    
 		    other: function(form) {
 		    res.send(fn({
-			    locals: {
+			     
 				    title: 'Adding A Score',
 					form: insertion_form.toHTML()
-					} }));
+					 }));
 
 
 		}
@@ -109,7 +117,30 @@ app.get('/add', function(req,res) {
 	
     });
 
-
+app.get('/bootstrap.css', function(req,res) {
+        res.writeHead(200, {"Content-Type": "text/css"});
+        fs.readFile('./css/bootstrap.css' , 'utf8', function(err, fd) {
+                res.end(fd);
+            });
+    });
+app.get('/bootstrap.css.map',function(req,res) {
+        res.send(fs.readFileSync('css/bootstrap.css.map').toString());
+    });
+app.get('/bootstrap.js',function(req,res){
+        res.writeHead(200, {"Content-Type": "text/javascript"});
+        fs.readFile('js/bootstrap.js', 'utf8', function(err, fd) {
+                res.end(fd);
+            });
+    });
+app.get('/docs.js',function(req,res){
+	res.writeHead(200, {"Content-Type": "text/javascript"});
+	fs.readFile('js/docs.min.js', 'utf8' ,function(err, fd) {
+		res.end(fd);
+	    });
+app.get('/fonts/glyphicons-halflings-regular.woff',function(req,res){
+	res.send(fs.readFileSync('fonts/glyphicons-halflings-regular.woff'))
+	    });
+//app.get('/
 
 // A hello world index stub
 
@@ -135,6 +166,12 @@ var query = client.query('SELECT 1 FROM GolfRounds');
 */
 // TODO: Make this respond to req params and build a query.
 //Pulls all files in the golfrounds table.
+
+
+app.get('/formtest', function(req,res) {
+	res.send(JSON.stringify(insertion_form));
+
+    });
 app.get('/readall', function(req, res) {
 	//	buff = "Database:";
 	//	res.send('A Reader will go here');
@@ -151,13 +188,35 @@ app.get('/readall', function(req, res) {
        
     });
 
+//Designed to use Jade to clean up the output into a table
+app.get('/readjade',function(req,res) {
+	var rows = [];
+	var query = client.query('SELECT * FROM GolfRounds');
+	query.on('row', function(row){
+		rows.push(row);
+	    });
+	query.on('end', function(row){
+		res.send(jadeTable({"Result": {"rows": rows}}));
+	    });
+    });
+
+app.get('/carouselForm', function(req,res){
+	//res.send("Stub. Adding a carousel style form input for mobile users.");
+	res.send(jadeCarousel({"fields": [{"name": "This"},{"name": "is"},{"name":"a"},{"name":"test."}]}));
+
+
+});
 app.get('/edit', function(req,res) {
+	//if(req.
 	res.send("Stub. Need an editor page");
 	// Edit can manage Deletions, updates, and etc.
 	//Just need to actually build it/ find one.
 
 
     });
+    //app.post('/edit', function(req,res) {
+	
+	//   });
 
 // Don't mess with this stuff
 var port = process.env.PORT || 5000;

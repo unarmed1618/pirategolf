@@ -1,0 +1,76 @@
+doctype html
+html(lang="en")
+ head 
+  include includes/head
+  title Carousel of Forms
+ body
+  //Carousel
+  div(id= "myCarousel",class= "carousel slide", data-ride="carousel")
+   //Indicators
+   ol.carousel-indicators
+    each field, i in fields
+     if i == 0
+      li(data-target="#myCarousel", data-slide-to=i,class="active")
+     else
+      li(data-target="#myCarousel", data-slide-to=i)
+   div.carousel-inner 
+    each field, i in fields
+     if(i == 0)
+      div.item.active
+       img(data-src="holder.js/800x480/auto/#777:#7a7a7a/text:First slide",alt="First Slide")
+       div.container
+        div.carousel-caption
+         h1=field.name
+     else
+      div.item
+       img(data-src="holder.js/800x480/auto/#777:#7a7a7a/text:Slide #" +i, alt="Slide #" +i)
+       div.container
+        div.carousel-caption
+         h1=field.name
+     //Controls
+   a(class="left carousel-control", href="#myCarousel",data-slide="prev")
+    span.glyphicon.glyphicon-chevron-left
+   a(class="right carousel-control",href="#myCarousel",data-slide="next")
+    span.glyphicon.glyphicon-chevron-right
+  include includes/footer
+ //
+  table.table
+   tr 
+    th Player
+    th Course
+    th Tournament
+    th Practice?
+    th Hole
+    th Score
+    th Fairway?
+    th GoPosition
+    th WedgeReg
+    th WedgeDist
+    th WedgeRough
+    th GreenInOut
+    th GreenLetter
+    th Putts
+    th UpDownSuccess
+    th UpDownBunker
+    th UpDownInOut
+   each row, i in Result.rows
+    tr
+     td=row.player
+     td=row.course
+     td=row.tournament
+     td=row.practice
+     td=row.hole
+     td=row.score
+     td=row.fairway
+     td=row.goposition
+     td=row.wedgereg
+     td=row.wedgedist
+     td=row.wedgerough
+     td=row.greeninout
+     td=row.greenletter
+     td=row.putts
+     td=row.updownsuccess
+     td=row.updownbunker
+     td=row.updowninout
+    
+ 

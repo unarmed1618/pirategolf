@@ -1,0 +1,45 @@
+doctype html
+html
+ head 
+  include includes/head
+ body
+  table.table
+   tr 
+    th Player
+    th Course
+    th Tournament
+    th Practice?
+    th Hole
+    th Score
+    th Fairway?
+    th GoPosition
+    th WedgeReg
+    th WedgeDist
+    th WedgeRough
+    th GreenInOut
+    th GreenLetter
+    th Putts
+    th UpDownSuccess
+    th UpDownBunker
+    th UpDownInOut
+   each row, i in Result.rows
+    tr
+     td=row.player
+     td=row.course
+     td=row.tournament
+     td=row.practice
+     td=row.hole
+     td=row.score
+     td=row.fairway
+     td=row.goposition
+     td=row.wedgereg
+     td=row.wedgedist
+     td=row.wedgerough
+     td=row.greeninout
+     td=row.greenletter
+     td=row.putts
+     td=row.updownsuccess
+     td=row.updownbunker
+     td=row.updowninout
+    
+ 

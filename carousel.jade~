@@ -5,30 +5,47 @@ html(lang="en")
   title Carousel of Forms
  body
   //Carousel
-  //form
-  div(id= "myCarousel",class= "carousel slide", data-ride="carousel",data-pause="true")
-   //Indicators
-   ol.carousel-indicators
-    each field, i in fields
-     if i == "player"
-      li(data-target="#myCarousel", data-slide-to=i,class="active")
-     else
-      li(data-target="#myCarousel", data-slide-to=i)
-   div.carousel-inner 
-    each field, i in fields
-     if(i == "player")
-      div.item.active
-       img(data-src="holder.js/480x800/auto/#777:#7a7a7a/text:"+ i,alt="First Slide")
-       div.container
-        div.carousel-caption
-         h1=field.name
-     else
-      div.item
-       img(data-src="holder.js/480x800/auto/#777:#7a7a7a/text:" +i, alt=i)
-       div.container
-        div.carousel-caption
-         h1=field.name
-           
+  form(method="get")
+   div(id= "myCarousel",class= "carousel slide", data-ride="carousel",data-interval=0)
+    //Indicators
+    ol.carousel-indicators
+     each field, i in fields
+      if i == "player"
+       li(data-target="#myCarousel", data-slide-to=i,class="active")
+      else
+       li(data-target="#myCarousel", data-slide-to=i)
+    div.carousel-inner 
+     each field, i in fields
+      if(i == "player")
+       div.item.active
+        img(data-src="holder.js/480x800/auto/#777:#7a7a7a/text:"+ i,alt="First Slide")
+        div.container
+         div.carousel-caption          
+          if(field.required)
+           div.field.required
+            label(for="id_"+i)
+             h1=field.name
+            input(type=field.widget.type,name=field.name,id="id_" + i)
+          else
+           div.field
+            label(for="id_"+i)
+             h1=field.name
+            input(type=field.widget.type,name=field.name,id="id_" + i)
+      else
+       div.item
+        img(data-src="holder.js/480x800/auto/#777:#7a7a7a/text:" +i, alt=i)
+        div.container
+         div.carousel-caption
+          if(field.required)
+           div.field.required
+            label(for="id_"+i)
+             h1=field.name
+            input(type=field.widget.type,name=field.name,id="id_" + i)
+      	  else
+           div.field
+            label(for="id_"+i)
+             h1=field.name
+            input(type=field.widget.type,name=field.name,id="id_" + i)  
    //Controls
    a(class="left carousel-control", href="#myCarousel",data-slide="prev")
     span.glyphicon.glyphicon-chevron-left

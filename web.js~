@@ -87,7 +87,7 @@ app.configure(function() {
 	app.use(app.router);
     });
 app.get('/env', function(req,res) {
-	res.send(process.env.NODE_ENV);
+	res.send(JSON.stringify(process.env));
     });
 app.get('/add', function(req,res) {
 	insertion_form.handle(req, {

@@ -24,9 +24,10 @@ var jadeTemplate = fs.readFileSync('page.jade').toString();
 var fn = jade.compile(jadeTemplate, jadeOptions);
 var jadeForm = fs.readFileSync('form.jade').toString();
 var jfm = jade.compile(jadeForm, jadeOptions);
-
-var pg = require("pg").native;
-//var pg = require("pg");
+if(process.env.PWD == "/app")
+    var pg = require("pg").native;
+else
+    var pg = require("pg");
 
 var forms = require("forms");
 
@@ -35,7 +36,7 @@ var forms = require("forms");
 // Local variables necessary for plugins
 // String for connecting to the database so it can be changed if necessary-
 
-var conString = "postgres://zfaagftogdvhjz:pcXlJD1bP9AygIM7ivINuDOHvS@ec2-184-73-194-196.compute-1.amazonaws.com:5432/dfcvk500ed0il4";
+    var conString = process.env.DATABASE_URL||"postgres@localhost/localGolf";
 // Client instatiation
 var client = new pg.Client(conString);
 //Forms hooks

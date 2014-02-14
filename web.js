@@ -36,7 +36,7 @@ var forms = require("forms");
 // Local variables necessary for plugins
 // String for connecting to the database so it can be changed if necessary-
 
-var conString = process.env.DATABASE_URL||"postgres://zfaagftogdvhjz:pcXlJD1bP9AygIM7ivINuDOHvS@ec2-184-73-194-196.compute-1.amazonaws.com:5432/dfcvk500ed0il4";
+    var conString = process.env.DATABASE_URL|"postgres://postgres@localhost/localGolf";
 // Client instatiation
 var client = new pg.Client(conString);
 //Forms hooks

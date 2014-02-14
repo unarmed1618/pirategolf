@@ -24,7 +24,10 @@ var jadeTemplate = fs.readFileSync('page.jade').toString();
 var fn = jade.compile(jadeTemplate, jadeOptions);
 var jadeForm = fs.readFileSync('form.jade').toString();
 var jfm = jade.compile(jadeForm, jadeOptions);
+
 var pg = require("pg").native;
+//var pg = require("pg");
+
 var forms = require("forms");
 
 // Plugin Declarations complete
@@ -83,7 +86,9 @@ app.configure(function() {
 	app.use(express.bodyParser());
 	app.use(app.router);
     });
-
+app.get('/env', function(req,res) {
+	res.send(JSON.stringify(process.env));
+    });
 app.get('/add', function(req,res) {
 	insertion_form.handle(req, {
 		success: function (form) {

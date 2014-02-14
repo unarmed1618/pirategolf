@@ -16,7 +16,7 @@ var logfmt = require("logfmt");
 var fs = require('fs');
 var jadeOptions = {filename: './', pretty:true };
 var jade = require('jade');
-var jadeCarouselBox = fs.readFileSync('formeater.jade').toString();
+var jadeCarouselBox = fs.readFileSync('carousel.jade').toString();
 var jadeCarousel = jade.compile(jadeCarouselBox, jadeOptions);
 var jadeTableBox = fs.readFileSync('table.jade').toString();
 var jadeTable = jade.compile(jadeTableBox, jadeOptions);
@@ -24,7 +24,10 @@ var jadeTemplate = fs.readFileSync('page.jade').toString();
 var fn = jade.compile(jadeTemplate, jadeOptions);
 var jadeForm = fs.readFileSync('form.jade').toString();
 var jfm = jade.compile(jadeForm, jadeOptions);
+
 var pg = require("pg").native;
+//var pg = require("pg");
+
 var forms = require("forms");
 
 // Plugin Declarations complete
@@ -83,7 +86,9 @@ app.configure(function() {
 	app.use(express.bodyParser());
 	app.use(app.router);
     });
-
+app.get('/env', function(req,res) {
+	res.send(process.env.NODE_ENV);
+    });
 app.get('/add', function(req,res) {
 	insertion_form.handle(req, {
 		success: function (form) {

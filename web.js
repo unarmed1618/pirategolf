@@ -25,10 +25,10 @@ var fn = jade.compile(jadeTemplate, jadeOptions);
 var jadeForm = fs.readFileSync('form.jade').toString();
 var jfm = jade.compile(jadeForm, jadeOptions);
 console.log("vars up except pg");
-if(process.env.PWD == "/app")
+if(process.env.PWD == "/app"||"/Users/johndarrow/pirategolfWS/pirategolf")
     var pg = require("pg").native;
 else
-    var pg = require("pg");
+   var pg = require("pg");
 console.log("pg built");
 var forms = require("forms");
 
@@ -36,11 +36,16 @@ var forms = require("forms");
 
 // Local variables necessary for plugins
 // String for connecting to the database so it can be changed if necessary-
+//var conString = "postgres://zfaagftogdvhjz:pcXlJD1bP9AygIM7ivINuDOHvS@ec2-184-73-194-196.compute-1.amazonaws.com/dfcvk500ed0il4";
+
+
+
 if(process.env.PWD == "/app")
     var conString = process.env.DATABASE_URL;
+else if(process.env.PWD == "/Users/johndarrow/pirategolfWS/pirategolf")
+    var conString = "postgres://zfaagftogdvhjz:pcXlJD1bP9AygIM7ivINuDOHvS@ec2-184-73-194-196.compute-1.amazonaws.com/dfcvk500ed0il4";
 else
     var conString = "postgres://postgres:postgres@localhost/localGolf";
-
 
 
 

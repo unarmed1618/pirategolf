@@ -36,7 +36,7 @@ var forms = require("forms");
 
 // Local variables necessary for plugins
 // String for connecting to the database so it can be changed if necessary-
-var conString = "postgres://zfaagftogdvhjz:pcXlJD1bP9AygIM7ivINuDOHvS@ec2-184-73-194-196.compute-1.amazonaws.com/dfcvk500ed0il4";
+//var conString = "postgres://zfaagftogdvhjz:pcXlJD1bP9AygIM7ivINuDOHvS@ec2-184-73-194-196.compute-1.amazonaws.com/dfcvk500ed0il4";
 
 
 

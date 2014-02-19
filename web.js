@@ -14,8 +14,11 @@ var jquery = require("jquery");
 var express = require("express");
 var logfmt = require("logfmt");
 var fs = require('fs');
+var sql = require('sql');
 var jadeOptions = {filename: './', pretty:true };
 var jade = require('jade');
+var jadeStatsBox = fs.readFileSync('stats.jade').toString();
+var jadeStats = jade.compile(jadeStatsBox, jadeOptions);
 var jadeCarouselBox = fs.readFileSync('carousel.jade').toString();
 var jadeCarousel = jade.compile(jadeCarouselBox, jadeOptions);
 var jadeTableBox = fs.readFileSync('table.jade').toString();
@@ -113,6 +116,11 @@ app.get('/env', function(req,res) {
 	res.send(JSON.stringify(process.env));
     });
 console.log("Done!");
+//For Brianc's sql builder--
+var golfHoles = sql.define({
+	name: 'GolfRounds',
+	columns: ['player','course','tournament','practice','hole','score','fairway','goposition','wedgereg','wedgedist','wedgerough','greeninout','greenletter','putts','updownsuccess','updownbunker','updowninout']
+    });
 console.log("Building add...");
 app.get('/add', function(req,res) {
 	insertion_form.handle(req, {
@@ -126,25 +134,16 @@ app.get('/add', function(req,res) {
 			practiceCaster=0;
 		    res.writeHead(200, {'Content-Type': 'text/html'});
 		    res.write('<h1>Success!</h1>');
+		    //Using brianc's sql builder--
+		    //var insertquery = golfHoles.insertthings blah.
 		    client.query('INSERT INTO GolfRounds VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)',[form.data.player ,  form.data.course , form.data.tournament , practiceCaster , form.data.hole , form.data.score , form.data.fairway  , form.data.goposition , form.data.wedgereg , form.data.wedgedist , form.data.wedgerough , form.data.greeninout , form.data.greenletter, form.data.putts , form.data.updownsuccess , form.data.updownbunker , form.data.updowninout], function(err, result){
 			    if (err) throw err;                            
 			    res.write('posted');   });    
-		    res.end('<pre>' + util.inspect(form.data) + '</pre>'+ form.data.player);},                                                                                 
-		    
+		    res.end('<pre>' + util.inspect(form.data) + '</pre>'+ form.data.player);},
 		    other: function(form) {
-		    res.send(fn({
-			     
-				    title: 'Adding A Score',
-					form: insertion_form.toHTML()
-					 }));
-
-
+		    res.send(fn({ title: 'Adding A Score',form: insertion_form.toHTML() }));
 		}
-	    });       
-
-	
-	//	Builds the form
-	
+	    }); 
     });
 console.log("Done!");
 console.log("Pulling in css and javascript...");
@@ -197,7 +196,6 @@ app.get('/playerstats', function(req,res) {
     });
 app.get('/stats', function(req,res) {
 	res.send("This is a stub for generalized report generation");
-
     });
 app.get('/readspc', function(req,res) {
 	res.send(JSON.stringify(req));

@@ -5,6 +5,8 @@ html(lang="en")
   title Carousel of Forms
  body
   //Carousel
+  nav
+   a(href="ecu.edu",class= "h1") things
   form(method="get")
    div(id= "myCarousel",class= "carousel slide", data-ride="carousel",data-interval=0)
     //Indicators
@@ -41,7 +43,7 @@ html(lang="en")
             label(for="id_"+i)
              h1=field.name
             input(type=field.widget.type,name=field.name,id="id_" + i)
-      	  else
+          else
            div.field
             label(for="id_"+i)
              h1=field.name

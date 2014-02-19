@@ -189,6 +189,16 @@ app.get('/', function(req, res) {
   
   });
 console.log("Done!");
+app.get('/coachstats', function(req,res) {
+	res.send("This is a stub for coach report generation");
+    });
+app.get('/playerstats', function(req,res) {
+	res.send("This is a stub for player report generation");
+    });
+app.get('/stats', function(req,res) {
+	res.send("This is a stub for generalized report generation");
+
+    });
 app.get('/readspc', function(req,res) {
 	res.send(JSON.stringify(req));
 

@@ -189,6 +189,10 @@ app.get('/', function(req, res) {
   
   });
 console.log("Done!");
+app.get('/readspc', function(req,res) {
+	res.send(JSON.stringify(req));
+
+});
 /*
 app.get('/read',function(req,res) {
 var query = client.query('SELECT 1 FROM GolfRounds');

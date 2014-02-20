@@ -146,7 +146,6 @@ app.get('/add', function(req,res) {
 		    //Using brianc's sql builder--
 		    //var insertquery = golfHoles.insert
 		    client.query('INSERT INTO GolfRounds VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9,$10,$11,$12,$13,$14,$15,$16,$17)',arrayFix, function(err, result) {
-  		    //client.query('INSERT INTO GolfRounds VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)',[form.data.player ,  form.data.course , form.data.tournament , practiceCaster , form.data.hole , form.data.score , form.data.fairway  , form.data.goposition , form.data.wedgereg , form.data.wedgedist , form.data.wedgerough , form.data.greeninout , form.data.greenletter, form.data.putts , form.data.updownsuccess , form.data.updownbunker , form.data.updowninout], function(err, result){
 			    if (err) throw err;                            
 			    res.write('posted');   });    
 		    res.end('<pre>' + util.inspect(form.data) + '</pre>'+ form.data.player);},
@@ -228,23 +227,6 @@ app.get('/formtest', function(req,res) {
 	res.send(JSON.stringify(insertion_form));
 
     });
-/*
-app.get('/readall', function(req, res) {
-	//	buff = "Database:";
-	//	res.send('A Reader will go here');
-	res.writeHead(200, { 'Content-Type': 'text/html' });
-	var query = client.query('SELECT * FROM GolfRounds', function(err, result) { 
-		//Appends all rows recieved in 'result' to the buffer
-		//res.writeHead(200, { 'Content-Type': 'text/html' });
-		for(var i in result.rows) { 
-		    res.write( JSON.stringify(result.rows[i]));
-		    
-		}
-		res.end(); //responds with the filled buffer	
-    });
-       
-    });
-*/
 //Designed to use Jade to clean up the output into a table
 app.get('/readjade',function(req,res) {
 	var rows = [];

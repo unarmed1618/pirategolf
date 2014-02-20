@@ -145,7 +145,7 @@ app.get('/add', function(req,res) {
 		    res.write('<h1>Success!</h1>');
 		    //Using brianc's sql builder--
 		    //var insertquery = golfHoles.insert
-		    client.query('INSERT INTO GolfRounds VALUES ($1)',arrayFix, function(err, result) {
+		    client.query('INSERT INTO GolfRounds VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9,$10,$11,$12,$13,$14,$15,$16,$17)',arrayFix, function(err, result) {
   		    //client.query('INSERT INTO GolfRounds VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)',[form.data.player ,  form.data.course , form.data.tournament , practiceCaster , form.data.hole , form.data.score , form.data.fairway  , form.data.goposition , form.data.wedgereg , form.data.wedgedist , form.data.wedgerough , form.data.greeninout , form.data.greenletter, form.data.putts , form.data.updownsuccess , form.data.updownbunker , form.data.updowninout], function(err, result){
 			    if (err) throw err;                            
 			    res.write('posted');   });    

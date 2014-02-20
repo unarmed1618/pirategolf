@@ -14,6 +14,7 @@ var jquery = require("jquery");
 var express = require("express");
 var logfmt = require("logfmt");
 var fs = require('fs');
+var sql = require('sql');
 var jadeOptions = {filename: './', pretty:true };
 var jade = require('jade');
 var jadeStatsBox = fs.readFileSync('stats.jade').toString();
@@ -75,7 +76,7 @@ var insertion_form = forms.create({
 	player: fields.string({required: true}),
 	course: fields.string({required: true}),
 	tournament: fields.string(),
-	practice: fields.boolean(),
+	practice: fields.number(),
 	hole: fields.number({required:true}),
 	score: fields.number({required:true}),
 	fairway: fields.string({required:true, validators: [validators.maxlength(1)]}),
@@ -121,6 +122,14 @@ var golfHoles = sql.define({
 	columns: ['player','course','tournament','practice','hole','score','fairway','goposition','wedgereg','wedgedist','wedgerough','greeninout','greenletter','putts','updownsuccess','updownbunker','updowninout']
     });
 console.log("Building add...");
+function toArray(thing) {
+    var res = new Array();
+    for( var item in thing) 
+	{
+	   res.push(thing[item]);
+	}
+    return res;
+}
 app.get('/add', function(req,res) {
 	insertion_form.handle(req, {
 		success: function (form) {
@@ -131,11 +140,13 @@ app.get('/add', function(req,res) {
 			practiceCaster=1;
 		    else
 			practiceCaster=0;
+		    var arrayFix = toArray(form.data);
 		    res.writeHead(200, {'Content-Type': 'text/html'});
 		    res.write('<h1>Success!</h1>');
 		    //Using brianc's sql builder--
-		    //var insertquery = golfHoles.insertthings blah.
-		    client.query('INSERT INTO GolfRounds VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)',[form.data.player ,  form.data.course , form.data.tournament , practiceCaster , form.data.hole , form.data.score , form.data.fairway  , form.data.goposition , form.data.wedgereg , form.data.wedgedist , form.data.wedgerough , form.data.greeninout , form.data.greenletter, form.data.putts , form.data.updownsuccess , form.data.updownbunker , form.data.updowninout], function(err, result){
+		    //var insertquery = golfHoles.insert
+		    client.query('INSERT INTO GolfRounds VALUES ($1)',arrayFix, function(err, result) {
+  		    //client.query('INSERT INTO GolfRounds VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)',[form.data.player ,  form.data.course , form.data.tournament , practiceCaster , form.data.hole , form.data.score , form.data.fairway  , form.data.goposition , form.data.wedgereg , form.data.wedgedist , form.data.wedgerough , form.data.greeninout , form.data.greenletter, form.data.putts , form.data.updownsuccess , form.data.updownbunker , form.data.updowninout], function(err, result){
 			    if (err) throw err;                            
 			    res.write('posted');   });    
 		    res.end('<pre>' + util.inspect(form.data) + '</pre>'+ form.data.player);},

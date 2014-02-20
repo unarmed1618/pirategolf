@@ -112,6 +112,7 @@ app.configure(function() {
 */
 console.log("Done!");
 console.log("Building env...");
+app.use(express.static(__dirname + '/public'));
 app.get('/env', function(req,res) {
 	res.send(JSON.stringify(process.env));
     });
@@ -133,13 +134,7 @@ function toArray(thing) {
 app.get('/add', function(req,res) {
 	insertion_form.handle(req, {
 		success: function (form) {
-		    // there is a request and the form is valid                                                                              
-		    // form.data contains the submitted data                                                                                 
-		    var practiceCaster;
-		    if(form.data.practice)
-			practiceCaster=1;
-		    else
-			practiceCaster=0;
+		    //valid form                                                       
 		    var arrayFix = toArray(form.data);
 		    res.writeHead(200, {'Content-Type': 'text/html'});
 		    res.write('<h1>Success!</h1>');
@@ -242,7 +237,23 @@ console.log("Generating Carousel...");
 app.get('/carouselForm', function(req,res){
 	//res.send("Stub. Adding a carousel style form input for mobile users.");
 	//res.send(jadeCarousel({"fields": [{"name": "This"},{"name": "is"}]}));
-	res.send(jadeCarousel(insertion_form));
+	var holes = new Array();
+	/*
+	if(req.params.nHoles == 1)
+	    holes.push(1);
+	else if(req.params.nHoles == 9)
+	    for(var i= 0; i <9; i++)
+		holes.push(i);
+	else if(req.params.nHoles == 18)
+	    for(var i=0; i<18; i++)
+		holes.push(i);
+	*/
+	for(var i=0; i<req.params.nHoles;i++)
+	    holes.push(i);
+
+	//TODO: 
+	//res.send(JSON.stringify({"Holder": {"fields":insertion_form, "holes":holes}}));
+	res.send(jadeCarousel({"Holder": {"fields":JSON.stringify(insertion_form),"holes": holes}}));
 
 });
 console.log("Done!");

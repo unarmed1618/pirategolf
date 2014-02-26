@@ -123,6 +123,16 @@ var golfHoles = sql.define({
 	columns: ['player','course','tournament','practice','hole','score','fairway','goposition','wedgereg','wedgedist','wedgerough','greeninout','greenletter','putts','updownsuccess','updownbunker','updowninout']
     });
 console.log("Building add...");
+
+function getStuff(aName) 
+{
+    var rows[];
+    var query =   client.query("SELECT * FROM GolfRounds WHERE player = $1", aName);
+         query.on("row",function(row) {  rows.push(row);}
+         query.on("end", function(row) {return {"Result": {"rows":rows}}; }
+         });	
+}
+
 function toArray(thing) {
     var res = new Array();
     for( var item in thing) 
@@ -131,6 +141,12 @@ function toArray(thing) {
 	}
     return res;
 }
+
+
+
+
+
+
 app.get('/add', function(req,res) {
 	insertion_form.handle(req, {
 		success: function (form) {

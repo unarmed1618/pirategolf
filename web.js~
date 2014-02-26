@@ -112,6 +112,7 @@ app.configure(function() {
 */
 console.log("Done!");
 console.log("Building env...");
+app.use(express.static(__dirname + '/public'));
 app.get('/env', function(req,res) {
 	res.send(JSON.stringify(process.env));
     });

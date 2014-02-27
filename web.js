@@ -17,6 +17,8 @@ var fs = require('fs');
 var sql = require('sql');
 var jadeOptions = {filename: './', pretty:true };
 var jade = require('jade');
+var jadeAndre = fs.readFileSync('andre.jade');
+var andreJade = jade.compile(jadeAndre, jadeOptions);
 var jadeStatsBox = fs.readFileSync('stats.jade').toString();
 var jadeStats = jade.compile(jadeStatsBox, jadeOptions);
 var jadeCarouselBox = fs.readFileSync('carousel.jade').toString();
@@ -27,6 +29,7 @@ var jadeTemplate = fs.readFileSync('page.jade').toString();
 var fn = jade.compile(jadeTemplate, jadeOptions);
 var jadeForm = fs.readFileSync('form.jade').toString();
 var jfm = jade.compile(jadeForm, jadeOptions);
+var passport = require("passport");
 console.log("vars up except pg");
 if(process.env.PWD == "/app"||"/Users/johndarrow/pirategolfWS/pirategolf")
     var pg = require("pg").native;
@@ -112,10 +115,13 @@ app.configure(function() {
 */
 console.log("Done!");
 console.log("Building env...");
-app.use(express.static(__dirname + '/public'));
+//app.use(express.static(__dirname + '/public'));
 app.get('/env', function(req,res) {
 	res.send(JSON.stringify(process.env));
     });
+app.get('/andre',function(req,res) {
+	res.send(andreJade()); 
+});
 console.log("Done!");
 //For Brianc's sql builder--
 var golfHoles = sql.define({
@@ -124,15 +130,15 @@ var golfHoles = sql.define({
     });
 console.log("Building add...");
 
-function getStuff(aName) 
+/* function getStuff(aName) 
 {
-    var rows[];
+    var rows = [];
     var query =   client.query("SELECT * FROM GolfRounds WHERE player = $1", aName);
          query.on("row",function(row) {  rows.push(row);}
          query.on("end", function(row) {return {"Result": {"rows":rows}}; }
          });	
 }
-
+*/
 function toArray(thing) {
     var res = new Array();
     for( var item in thing) 
@@ -150,7 +156,7 @@ function toArray(thing) {
 app.get('/add', function(req,res) {
 	insertion_form.handle(req, {
 		success: function (form) {
-		    //valid form                                                       
+		    //valid form 
 		    var arrayFix = toArray(form.data);
 		    res.writeHead(200, {'Content-Type': 'text/html'});
 		    res.write('<h1>Success!</h1>');

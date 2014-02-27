@@ -1,0 +1,14 @@
+doctype html
+html
+ head 
+  include includes/head
+ body 
+  ul.nav.nav-tabs
+   li.active
+    a(href="#home", data-toggle="tab") A word
+   li
+    a(href="#profile", data-toggle="tab") Another Word
+  div.tab-content
+   div.tab-pane.active#home Things
+   div.tab-pane#profile Stuff
+  include includes/footer

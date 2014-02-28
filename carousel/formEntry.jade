@@ -1,0 +1,12 @@
+mixin formEntry(field)
+  div.carousel-caption
+   if(field.required)
+     div.field.required
+       label(for="id_"+field.name+"_" +hole.num)
+         h3= field.name
+       input(type=field.widget.type,name=field.name,id="id_"+field.name+"_"+hole.num)
+   else
+     div.field
+       label(for="id_"+field.name+"_" +hole.num)
+         h3= field.name
+       input(type=field.widget.type,name=field.name,id="id_"+field.name+"_"+hole.num)

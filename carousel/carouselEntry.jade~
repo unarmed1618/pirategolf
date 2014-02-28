@@ -1,0 +1,4 @@
+include formEntry
+mixin carouselEntry(holding)
+ each field in holding.fields
+  +formEntry(field)

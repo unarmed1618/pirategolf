@@ -21,6 +21,8 @@ var jadeAndre = fs.readFileSync('andre.jade');
 var andreJade = jade.compile(jadeAndre, jadeOptions);
 var jadeStatsBox = fs.readFileSync('stats.jade').toString();
 var jadeStats = jade.compile(jadeStatsBox, jadeOptions);
+var jadeVCarouselBox = fs.readFileSync('vCarousel.jade').toString();
+var jadeVCarousel = jade.compile(jadeVCarouselBox, jadeOptions);
 var jadeCarouselBox = fs.readFileSync('carousel.jade').toString();
 var jadeCarousel = jade.compile(jadeCarouselBox, jadeOptions);
 var jadeTableBox = fs.readFileSync('table.jade').toString();
@@ -152,7 +154,7 @@ function toArray(thing) {
 
 
 
-
+/*
 app.get('/add', function(req,res) {
 	insertion_form.handle(req, {
 		success: function (form) {
@@ -171,6 +173,7 @@ app.get('/add', function(req,res) {
 		}
 	    }); 
     });
+*/
 console.log("Done!");
 console.log("Pulling in css and javascript...");
 app.get('/bootstrap.css', function(req,res) {
@@ -256,6 +259,12 @@ app.get('/readjade',function(req,res) {
 	    });
     });
 console.log("Generating Carousel...");
+app.get('/vCarousel',function(req,res) {
+	var holes = new Array();
+	for( var i=0; i<req.params.nHoles;i++)
+	    holes.push(i);
+	res.send(jadeVCarousel({"Holder": {"fields":insertion_form,"holes": holes}}));
+    });
 app.get('/carouselForm', function(req,res){
 	//res.send("Stub. Adding a carousel style form input for mobile users.");
 	//res.send(jadeCarousel({"fields": [{"name": "This"},{"name": "is"}]}));
@@ -271,11 +280,11 @@ app.get('/carouselForm', function(req,res){
 		holes.push(i);
 	*/
 	for(var i=0; i<req.params.nHoles;i++)
-	    holes.push(i);
+	    {	    holes.push(i); }
 
 	//TODO: 
 	//res.send(JSON.stringify({"Holder": {"fields":insertion_form, "holes":holes}}));
-	res.send(jadeCarousel({"Holder": {"fields":JSON.stringify(insertion_form),"holes": holes}}));
+	res.send(jadeCarousel( {"fields":JSON.stringify(insertion_form),"holes": JSON.stringify(holes)}}));
 
 });
 console.log("Done!");

@@ -32,6 +32,7 @@ var fn = jade.compile(jadeTemplate, jadeOptions);
 var jadeForm = fs.readFileSync('form.jade').toString();
 var jfm = jade.compile(jadeForm, jadeOptions);
 var passport = require("passport");
+var DigestStrategy =require('passport-http').DigestStrategy;
 console.log("vars up except pg");
 if(process.env.PWD == "/app"||"/Users/johndarrow/pirategolfWS/pirategolf")
     var pg = require("pg").native;
@@ -77,26 +78,14 @@ console.log("Creating express...");
 var app = express();
 console.log("Done!");
 // The actual instertion form constructor
-var insertion_form = forms.create({
-	player: fields.string({required: true}),
-	course: fields.string({required: true}),
-	tournament: fields.string(),
-	practice: fields.number(),
-	hole: fields.number({required:true}),
-	score: fields.number({required:true}),
-	fairway: fields.string({required:true, validators: [validators.maxlength(1)]}),
-	goposition: fields.string({validators: [validators.maxlength(1)]}),
-	wedgereg: fields.string({validators: [validators.maxlength(1)]}),
-	wedgedist: fields.number(),
-	wedgerough: fields.string({validators: [validators.maxlength(1)]}),
-	greeninout: fields.number(),//fields.string({validators: [validators.maxlength(1)]}),
-	greenletter: fields.string({validators: [validators.maxlength(1)]}),
-	putts: fields.number(),
-	updownsuccess: fields.string({validators: [validators.maxlength(1)]}),
-	updownbunker: fields.string({validators: [validators.maxlength(1)]}),
-	updowninout: fields.number()
-	}); 
+var hole_form;
 //var carousel_form =
+fs.readFile("hole_form.json","utf8",function(err,data) {
+        if(err) throw err;
+        hole_form = forms.create(JSON.parse(data));
+    });
+
+app.use(express.static(__dirname + '/publicstatic'));
 
 app.use(logfmt.requestLogger()); //logfmt hook
 
@@ -106,15 +95,11 @@ app.use(logfmt.requestLogger()); //logfmt hook
 // res.send is a function that builds the response
 
 console.log("Running configure...");
-/*
-app.configure(function() {
-	app.set('views', __dirname);
-	app.set('view engine', 'jade');
 
-	app.use(express.bodyParser());
-	app.use(app.router);
+app.configure(function() {
+	app.set(passport.initialize());
     });
-*/
+
 console.log("Done!");
 console.log("Building env...");
 //app.use(express.static(__dirname + '/public'));
@@ -132,15 +117,6 @@ var golfHoles = sql.define({
     });
 console.log("Building add...");
 
-/* function getStuff(aName) 
-{
-    var rows = [];
-    var query =   client.query("SELECT * FROM GolfRounds WHERE player = $1", aName);
-         query.on("row",function(row) {  rows.push(row);}
-         query.on("end", function(row) {return {"Result": {"rows":rows}}; }
-         });	
-}
-*/
 function toArray(thing) {
     var res = new Array();
     for( var item in thing) 
@@ -154,67 +130,36 @@ function toArray(thing) {
 
 
 
-/*
-app.get('/add', function(req,res) {
-	insertion_form.handle(req, {
-		success: function (form) {
-		    //valid form 
-		    var arrayFix = toArray(form.data);
-		    res.writeHead(200, {'Content-Type': 'text/html'});
-		    res.write('<h1>Success!</h1>');
-		    //Using brianc's sql builder--
-		    //var insertquery = golfHoles.insert
-		    client.query('INSERT INTO GolfRounds VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9,$10,$11,$12,$13,$14,$15,$16,$17)',arrayFix, function(err, result) {
-			    if (err) throw err;                            
-			    res.write('posted');   });    
-		    res.end('<pre>' + util.inspect(form.data) + '</pre>'+ form.data.player);},
-		    other: function(form) {
-		    res.send(fn({ title: 'Adding A Score',form: insertion_form.toHTML() }));
-		}
-	    }); 
-    });
-*/
-console.log("Done!");
-console.log("Pulling in css and javascript...");
-app.get('/bootstrap.css', function(req,res) {
-        res.writeHead(200, {"Content-Type": "text/css"});
-        fs.readFile('./css/bootstrap.css' , 'utf8', function(err, fd) {
-                res.end(fd);
-            });
-    });
-app.get('/bootstrap.css.map',function(req,res) {
-        res.send(fs.readFileSync('css/bootstrap.css.map').toString());
-    });
-app.get('/bootstrap.js',function(req,res){
-        res.writeHead(200, {"Content-Type": "text/javascript"});
-        fs.readFile('js/bootstrap.js', 'utf8', function(err, fd) {
-                res.end(fd);
-            });
-    });
-app.get('/docs.js',function(req,res){
-	res.writeHead(200, {"Content-Type": "text/javascript"});
-	fs.readFile('js/docs.min.js', 'utf8' ,function(err, fd) {
-		res.end(fd);
-	    });
-    });
-app.get('/fonts/glyphicons-halflings-regular.woff',function(req,res){
-	res.send(fs.readFileSync('fonts/glyphicons-halflings-regular.woff'))
-	    });
 console.log("Done!");
 
 // A hello world index stub
+passport.use(new DigestStrategy({ qop: 'auth' },
+  function(username, done) {
+      console.log("Entering digeststrat");
+      console.log(username);
+      client.query("SELECT USERNAME, PASSWRD FROM Credentials WHERE USERNAME = $1", [username], function(err,result) {
+      if (err) { return done(err); }
+      if (!result) { return done(null, false); }
+      return done(null, result.rows[0].username, result.rows[0].passwrd);
+    });
+  },
+  function(params, done) {
+    // validate nonces as necessary
+    done(null, true)
+  }
+));
+app.get('/api/me', 
+  passport.authenticate('digest', { session: true }),
+  function(req, res) {
+    res.json(req.user);
+  });
+app.post('/login',passport.authenticate('digest', {successRedirect:'/Landing.html',failureRedirect:'/LoginPage.html'})
+
+);
+
 console.log("Generating root directory...");
 app.get('/', function(req, res) {
-	// You can also generate content this way- I'm planning to create some formatting functions and shit for when we need to make pretty stuff.
-	res.writeHead(200, { 'Content-Type': 'text/html' });
-	res.write('<!DOCTYPE html><html lang="en"><head>');
-	res.write('<meta charset="utf-8">');
-	res.write('<title>' + 'Some words' + '</title>');
-	res.write('</head><body>');
-	res.write('<h1><tt>' + 'more words' + '</tt></h1>');
-	res.write('</body></html>');
-	res.end();
-  
+    res.redirect('/!StartPage.html');
   });
 console.log("Done!");
 app.get('/coachstats', function(req,res) {
@@ -244,7 +189,7 @@ var query = client.query('SELECT 1 FROM GolfRounds');
 
 
 app.get('/formtest', function(req,res) {
-	res.send(JSON.stringify(insertion_form));
+	res.send(JSON.stringify(hole_form));
 
     });
 //Designed to use Jade to clean up the output into a table
@@ -263,7 +208,7 @@ app.get('/vCarousel',function(req,res) {
 	var holes = new Array();
 	for( var i=0; i<req.params.nHoles;i++)
 	    holes.push(i);
-	res.send(jadeVCarousel({"Holder": {"fields":insertion_form,"holes": holes}}));
+	res.send(jadeVCarousel({"Holder": {}}))
     });
 app.get('/carouselForm', function(req,res){
 	//res.send("Stub. Adding a carousel style form input for mobile users.");
@@ -284,7 +229,7 @@ app.get('/carouselForm', function(req,res){
 
 	//TODO: 
 	//res.send(JSON.stringify({"Holder": {"fields":insertion_form, "holes":holes}}));
-	res.send(jadeCarousel( {"fields":JSON.stringify(insertion_form),"holes": JSON.stringify(holes)}}));
+	res.send(jadeCarousel( {"fields":JSON.stringify(hole_form),"holes": JSON.stringify(holes)}));
 
 });
 console.log("Done!");
@@ -296,9 +241,6 @@ app.get('/edit', function(req,res) {
 
 
     });
-    //app.post('/edit', function(req,res) {
-	
-	//   });
 
 // Don't mess with this stuff
 console.log("Generating port...");

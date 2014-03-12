@@ -1,0 +1,14 @@
+{
+     "hole_score": "fields.number({required:true})",
+     "fairway": fields.string ({required:true, maxlength:1}),
+     "goposition": fields.string ({required:true, maxlength:1}),
+     "stroke_in_reg": fields.string ({required:true, maxlength:1}),//1 char
+     "stroke_in_ruff": fields.string ({required:true, maxlength:1}),// 1 char 
+     "wedgedist": fields.number ({required:true}),
+     "greeninout": fields.number ({required:true}),
+     "where_on_green": fields.string ({required:true, maxlength:1}),//1char
+     "putts": fields.number ({required:true}),
+     "updown_success":fields.number ({required:true}), //1char      
+     "updown_bunker":fields.number({required:true}),
+     "updown_inside5":fields.number({required:true})               
+}

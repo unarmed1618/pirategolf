@@ -77,25 +77,20 @@ console.log("Creating express...");
 var app = express();
 console.log("Done!");
 // The actual instertion form constructor
-var insertion_form = forms.create({
-	player: fields.string({required: true}),
-	course: fields.string({required: true}),
-	tournament: fields.string(),
-	practice: fields.number(),
-	hole: fields.number({required:true}),
-	score: fields.number({required:true}),
-	fairway: fields.string({required:true, validators: [validators.maxlength(1)]}),
-	goposition: fields.string({validators: [validators.maxlength(1)]}),
-	wedgereg: fields.string({validators: [validators.maxlength(1)]}),
-	wedgedist: fields.number(),
-	wedgerough: fields.string({validators: [validators.maxlength(1)]}),
-	greeninout: fields.number(),//fields.string({validators: [validators.maxlength(1)]}),
-	greenletter: fields.string({validators: [validators.maxlength(1)]}),
-	putts: fields.number(),
-	updownsuccess: fields.string({validators: [validators.maxlength(1)]}),
-	updownbunker: fields.string({validators: [validators.maxlength(1)]}),
-	updowninout: fields.number()
-	}); 
+var hole_form = forms.create({
+	hole_score: fields.number
+	fairway: fields.string
+	goposition: fields.string // 1 char
+	stroke_in_reg: fields.string //1 char
+	stroke_in_ruff: fields.string // 1 char
+	wedgedist: fields.number
+	greeninout: fields.number
+	where_on_green: fields.string //1char
+	putts: fields.number
+	updown_success:fields.number  //1char
+	updown_bunker:fields.number //1 char
+	updown_inside5:fields.number //1 char
+	});
 //var carousel_form =
 
 app.use(logfmt.requestLogger()); //logfmt hook
@@ -154,7 +149,7 @@ function toArray(thing) {
 
 
 
-
+/*
 app.get('/add', function(req,res) {
 	insertion_form.handle(req, {
 		success: function (form) {
@@ -173,6 +168,7 @@ app.get('/add', function(req,res) {
 		}
 	    }); 
     });
+*/
 console.log("Done!");
 console.log("Pulling in css and javascript...");
 app.get('/bootstrap.css', function(req,res) {

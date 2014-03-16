@@ -3,12 +3,14 @@
 // - Everything else
 //Hopefully this will work. 
 //
-
-
 // web.js -- Filename 
-
-
 // This section necessary to declare plugins/extensions
+/*
+var express       =   require("express"), 
+    connect     =   require("connect"), 
+    postmark    =   require("postmark")(POSTMARK_API_KEY);
+*/
+var login = require("login").postgresql;
 var util = require("util");
 var jquery = require("jquery");
 var express = require("express");
@@ -17,8 +19,6 @@ var fs = require('fs');
 var sql = require('sql');
 var jadeOptions = {filename: './', pretty:true };
 var jade = require('jade');
-var jadeAndre = fs.readFileSync('andre.jade');
-var andreJade = jade.compile(jadeAndre, jadeOptions);
 var jadeStatsBox = fs.readFileSync('stats.jade').toString();
 var jadeStats = jade.compile(jadeStatsBox, jadeOptions);
 var jadeVCarouselBox = fs.readFileSync('vCarousel.jade').toString();
@@ -31,16 +31,15 @@ var jadeTemplate = fs.readFileSync('page.jade').toString();
 var fn = jade.compile(jadeTemplate, jadeOptions);
 var jadeForm = fs.readFileSync('form.jade').toString();
 var jfm = jade.compile(jadeForm, jadeOptions);
-var passport = require("passport");
-var DigestStrategy =require('passport-http').DigestStrategy;
-console.log("vars up except pg");
+
+//console.log("vars up except pg");
 if(process.env.PWD == "/app"||"/Users/johndarrow/pirategolfWS/pirategolf")
     var pg = require("pg").native;
 else
    var pg = require("pg");
-console.log("pg built");
+//console.log("pg built");
 var forms = require("forms");
-
+var holes = [1, 2, 3,4, 5, 6, 7, 8, 9, 10, 11, 12, 13,14,15,16,17,18];
 // Plugin Declarations complete
 
 // Local variables necessary for plugins
@@ -59,32 +58,43 @@ else
 
 
 // Client instatiation
-console.log("Creating client at " + conString + "...");
+//console.log("Creating client at " + conString + "...");
 var client = new pg.Client(conString);
-console.log("Done!");
+//console.log("Done!");
 //Forms hooks
-var fields = forms.fields, validators = forms.validators;
+var fields = forms.fields, validators = forms.validators, widgets = forms.validators;
 
 
 
 var buff = "Database:"; // For a string to append a full read to
-
-
-console.log("Attempting to connect to DB...");
-client.connect(); //To actually establish a connection TODO: Use a client pool instead of this.
-console.log("Done!");
+//console.log("Attempting to connect to DB...");
+//client.connect(); //To actually establish a connection TODO: Use a client pool instead of this.
+//console.log("Done!");
 //express local 
-console.log("Creating express...");
+//console.log("Creating express...");
 var app = express();
-console.log("Done!");
-// The actual instertion form constructor
-var hole_form;
-//var carousel_form =
-fs.readFile("hole_form.json","utf8",function(err,data) {
+var hole_form = forms.create({
+     hole_score: fields.number({required:true, widget: widgets.number}),
+     fairway: fields.string({required:true, maxlength:1,widget: widgets.text}),
+     goposition: fields.string ({required:true, maxlength:1,widget: widgets.text}),
+     stroke_in_reg: fields.string ({required:true,maxlength:1,widget: widgets.text}),
+     stroke_in_ruff: fields.string ({required:true,maxlength:1,widget: widgets.text}),
+     wedgedist: fields.number ({required:true,widget : widgets.number}),
+     greeninout: fields.number ({required:true,widget : widgets.number}),
+     where_on_green: fields.string ({required:true, maxlength:1,widget : widgets.text}),
+     putts: fields.number ({required:true,widget : widgets.number}),
+     updown_success:fields.number ({required:true,widget : widgets.number}),
+     updown_bunker:fields.number({required:true,widget : widgets.number}),
+     updown_inside5:fields.number({required:true,widget : widgets.number})
+}
+
+);
+//var holes = new Array();
+/*fs.readFile("hole_form.json","utf8",function(err,data) {
         if(err) throw err;
         hole_form = forms.create(JSON.parse(data));
     });
-
+*/
 app.use(express.static(__dirname + '/publicstatic'));
 
 app.use(logfmt.requestLogger()); //logfmt hook
@@ -92,30 +102,34 @@ app.use(logfmt.requestLogger()); //logfmt hook
 //This is called at pirategolf.heroku.com/add
 // req == the request's parameters
 // res == the response
+
 // res.send is a function that builds the response
 
-console.log("Running configure...");
 
-app.configure(function() {
-	app.set(passport.initialize());
-    });
+//console.log("Running configure...");
+/*
+pg.connect(config.postgresql, function (err, db) {
+  var auth = login(app, db, postmark, { 
+    app_name: "Magical Application", 
+    base_url: "http://unicorn.example.com", 
+    from: "donotreply@example.com"
+  });.
+});
+*/
 
-console.log("Done!");
-console.log("Building env...");
+//console.log("Done!");
+//console.log("Building env...");
 //app.use(express.static(__dirname + '/public'));
 app.get('/env', function(req,res) {
 	res.send(JSON.stringify(process.env));
     });
-app.get('/andre',function(req,res) {
-	res.send(andreJade()); 
-});
-console.log("Done!");
+//console.log("Done!");
 //For Brianc's sql builder--
 var golfHoles = sql.define({
 	name: 'GolfRounds',
 	columns: ['player','course','tournament','practice','hole','score','fairway','goposition','wedgereg','wedgedist','wedgerough','greeninout','greenletter','putts','updownsuccess','updownbunker','updowninout']
     });
-console.log("Building add...");
+//console.log("Building add...");
 
 function toArray(thing) {
     var res = new Array();
@@ -126,42 +140,13 @@ function toArray(thing) {
     return res;
 }
 
+//console.log("Done!");
 
-
-
-
-console.log("Done!");
-
-// A hello world index stub
-passport.use(new DigestStrategy({ qop: 'auth' },
-  function(username, done) {
-      console.log("Entering digeststrat");
-      console.log(username);
-      client.query("SELECT USERNAME, PASSWRD FROM Credentials WHERE USERNAME = $1", [username], function(err,result) {
-      if (err) { return done(err); }
-      if (!result) { return done(null, false); }
-      return done(null, result.rows[0].username, result.rows[0].passwrd);
-    });
-  },
-  function(params, done) {
-    // validate nonces as necessary
-    done(null, true)
-  }
-));
-app.get('/api/me', 
-  passport.authenticate('digest', { session: true }),
-  function(req, res) {
-    res.json(req.user);
-  });
-app.post('/login',passport.authenticate('digest', {successRedirect:'/Landing.html',failureRedirect:'/LoginPage.html'})
-
-);
-
-console.log("Generating root directory...");
+//console.log("Generating root directory...");
 app.get('/', function(req, res) {
     res.redirect('/!StartPage.html');
   });
-console.log("Done!");
+//console.log("Done!");
 app.get('/coachstats', function(req,res) {
 	res.send("This is a stub for coach report generation");
     });
@@ -175,6 +160,15 @@ app.get('/readspc', function(req,res) {
 	res.send(JSON.stringify(req));
 
 });
+app.get('/holeForm',function(req,res) {
+//var holes = new Array();
+   // for( var i=0; i<18;i++)
+ //       holes.push(i+1);
+//    res.send(JSON.stringify(holes));
+    var stuff = {"holes": holes, "holeForm": hole_form};
+    res.send(JSON.stringify(stuff));
+
+});
 /*
 app.get('/read',function(req,res) {
 var query = client.query('SELECT 1 FROM GolfRounds');
@@ -186,7 +180,6 @@ var query = client.query('SELECT 1 FROM GolfRounds');
 */
 // TODO: Make this respond to req params and build a query.
 //Pulls all files in the golfrounds table.
-
 
 app.get('/formtest', function(req,res) {
 	res.send(JSON.stringify(hole_form));
@@ -203,12 +196,10 @@ app.get('/readjade',function(req,res) {
 		res.send(jadeTable({"Result": {"rows": rows}}));
 	    });
     });
-console.log("Generating Carousel...");
+//console.log("Generating Carousel...");
 app.get('/vCarousel',function(req,res) {
-	var holes = new Array();
-	for( var i=0; i<req.params.nHoles;i++)
-	    holes.push(i);
-	res.send(jadeVCarousel({"Holder": {}}))
+//    res.send(JSON.stringify(hole_form));
+	res.send(jadeVCarousel({"Holder": {"holes":holes,"hole_form":hole_form}}));
     });
 app.get('/carouselForm', function(req,res){
 	//res.send("Stub. Adding a carousel style form input for mobile users.");
@@ -224,15 +215,15 @@ app.get('/carouselForm', function(req,res){
 	    for(var i=0; i<18; i++)
 		holes.push(i);
 	*/
-	for(var i=0; i<req.params.nHoles;i++)
+	for(var i=0; i<18;i++)
 	    {	    holes.push(i); }
 
 	//TODO: 
 	//res.send(JSON.stringify({"Holder": {"fields":insertion_form, "holes":holes}}));
-	res.send(jadeCarousel( {"fields":JSON.stringify(hole_form),"holes": JSON.stringify(holes)}));
+	res.send(jadeCarousel(JSON.stringify( {"fields":JSON.stringify(hole_form),"holes": JSON.stringify(holes)})));
 
 });
-console.log("Done!");
+//console.log("Done!");
 app.get('/edit', function(req,res) {
 	//if(req.
 	res.send("Stub. Need an editor page");
@@ -243,9 +234,9 @@ app.get('/edit', function(req,res) {
     });
 
 // Don't mess with this stuff
-console.log("Generating port...");
+//console.log("Generating port...");
 var port = process.env.PORT || 5000;
 app.listen(port, function() {
-	console.log("Listening on " + port);
+	//console.log("Listening on " + port);
     });
-console.log("Done!");
+//console.log("Done!");

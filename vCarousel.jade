@@ -5,11 +5,11 @@ html(lang="en")
   include includes/head
   title Carousel of Forms
  body
-  //Carousel
-  //nav  //wrap things in other things.
+   //Carousel
+   //nav  //wrap things in other things.
     //wrap the whole damn thing in a form.
-  //   a(href="http://ecu.edu",class= "h2") things
-  form(method="get")
+   //   a(href="http://ecu.edu",class= "h2") things
+    //form(method="get")
    div(id= "myCarousel",class= "carousel slide", data-ride="carousel",data-interval=0)
     //Indicators
     ol.carousel-indicators
@@ -25,33 +25,37 @@ html(lang="en")
         img(data-src="holder.js/480x800/auto/#777:#7a7a7a/text:"+ i,alt="First Slide")
         div.container
          div.carousel-caption          
-            each field, i in Holder.hole_form.fields
+           form(method="post", role="form").form-horizontal
+            div.form-group
+             each field, i in Holder.hole_form.fields
               if(field.required)
                 div.field.required.form-group
-                  label(for="id_"+i)
-                    =field.name
-                  input(name=field.name,id+"id_"+ i).form-control
+                  label(for="id_"+i).col-xs-4.control-label= field.name
+                  div.col-xs-6
+                   input(name=field.name,id+"id_"+ i).form-control
               else
                 div.field.form-group
-                  label(for="id_"+i)
-                    =field.name
-                  input(name=field.name,id+"id_"+i).form-control
+                  label(for="id_"+i).col-xs-4.control-label= field.name
+                  div.col-xs-6
+                   input(name=field.name,id+"id_"+i).form-control
       else
        div.item
         img(data-src="holder.js/480x800/auto/#777:#7a7a7a/text:" +i, alt=i)
         div.container
          div.carousel-caption
-          each field, i in Holder.hole_form.fields
-            if(field.required)
-              div.field.required.form-group
-                label(for="id_"+i)
-                 =field.name
-                input(name=field.name,id+"id_"+ i).form-control
-            else
-              div.field.form-group
-                label(for="id_"+i)
-                 =field.name
-                input(name=field.name,id+"id_"+i).form-control
+          form(method="post", role="form").form-horizontal
+           div.form-group
+            each field, i in Holder.hole_form.fields
+              if(field.required)
+                div.field.required.form-group
+                  label(for="id_"+i).col-xs-4.control-label= field.name
+                  div.col-xs-6
+                    input(name=field.name,id+"id_"+ i).form-control
+              else
+                div.field.form-group
+                  label(for="id_"+i).col-xs-4.control-label= field.name
+                  div.col-xs-6
+                    input(name=field.name,id+"id_"+i).form-control
    //Controls
    a(class="left carousel-control", href="#myCarousel",data-slide="prev")
     span.glyphicon.glyphicon-chevron-left

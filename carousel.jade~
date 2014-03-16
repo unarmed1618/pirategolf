@@ -18,9 +18,7 @@ html(lang="en")
       else
        li(data-target="#myCarousel", data-slide-to=i)
     div.carousel-inner 
-     
-     each hole, i in Holder.holes      
-       
+     each hole, i in Holder.holes             
       if i == 0
        div.item.active 
         img(data-src="holder.js/480x800/auto/#777:#7a7a7a/text:"+ i,alt="First Slide")
@@ -37,7 +35,6 @@ html(lang="en")
              label(for="id_"+i+"_"+j)
               h1=field.name
              //input(type=field.widget.type,name=field.name,id="id_" + i+"_"+j)
-     
       else
        div.item
         img(data-src="holder.js/480x800/auto/#777:#7a7a7a/text:" +i, alt=i)

@@ -1,0 +1,11 @@
+In order to eliminate the nastiness of dealing with the carousel in a big fat
+monkey box, I'm going to bake some curry.
+The Carousel is composed of a first entry, and a set of entries after that.
+Each Carousel Entry is herein composed of a bit of form data. 
+Each bit of form data needs it's own formatting based on the data involved.
+
+So the plan is:
+formEntry.jade == a mixin for dealing with a field of a form
+carouselEntry.jade == a mixin for dealing with putting the fields into a page.
+carouselHolder.jade == a mixin for dealing with the entire carousel//optional
+ 

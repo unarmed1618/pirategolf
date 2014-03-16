@@ -17,8 +17,12 @@ var fs = require('fs');
 var sql = require('sql');
 var jadeOptions = {filename: './', pretty:true };
 var jade = require('jade');
+var jadeAndre = fs.readFileSync('andre.jade');
+var andreJade = jade.compile(jadeAndre, jadeOptions);
 var jadeStatsBox = fs.readFileSync('stats.jade').toString();
 var jadeStats = jade.compile(jadeStatsBox, jadeOptions);
+var jadeVCarouselBox = fs.readFileSync('vCarousel.jade').toString();
+var jadeVCarousel = jade.compile(jadeVCarouselBox, jadeOptions);
 var jadeCarouselBox = fs.readFileSync('carousel.jade').toString();
 var jadeCarousel = jade.compile(jadeCarouselBox, jadeOptions);
 var jadeTableBox = fs.readFileSync('table.jade').toString();
@@ -27,6 +31,7 @@ var jadeTemplate = fs.readFileSync('page.jade').toString();
 var fn = jade.compile(jadeTemplate, jadeOptions);
 var jadeForm = fs.readFileSync('form.jade').toString();
 var jfm = jade.compile(jadeForm, jadeOptions);
+var passport = require("passport");
 console.log("vars up except pg");
 if(process.env.PWD == "/app"||"/Users/johndarrow/pirategolfWS/pirategolf")
     var pg = require("pg").native;
@@ -72,25 +77,20 @@ console.log("Creating express...");
 var app = express();
 console.log("Done!");
 // The actual instertion form constructor
-var insertion_form = forms.create({
-	player: fields.string({required: true}),
-	course: fields.string({required: true}),
-	tournament: fields.string(),
-	practice: fields.number(),
-	hole: fields.number({required:true}),
-	score: fields.number({required:true}),
-	fairway: fields.string({required:true, validators: [validators.maxlength(1)]}),
-	goposition: fields.string({validators: [validators.maxlength(1)]}),
-	wedgereg: fields.string({validators: [validators.maxlength(1)]}),
-	wedgedist: fields.number(),
-	wedgerough: fields.string({validators: [validators.maxlength(1)]}),
-	greeninout: fields.number(),//fields.string({validators: [validators.maxlength(1)]}),
-	greenletter: fields.string({validators: [validators.maxlength(1)]}),
-	putts: fields.number(),
-	updownsuccess: fields.string({validators: [validators.maxlength(1)]}),
-	updownbunker: fields.string({validators: [validators.maxlength(1)]}),
-	updowninout: fields.number()
-	}); 
+var hole_form = forms.create({
+	hole_score: fields.number
+	fairway: fields.string
+	goposition: fields.string // 1 char
+	stroke_in_reg: fields.string //1 char
+	stroke_in_ruff: fields.string // 1 char
+	wedgedist: fields.number
+	greeninout: fields.number
+	where_on_green: fields.string //1char
+	putts: fields.number
+	updown_success:fields.number  //1char
+	updown_bunker:fields.number //1 char
+	updown_inside5:fields.number //1 char
+	});
 //var carousel_form =
 
 app.use(logfmt.requestLogger()); //logfmt hook
@@ -112,10 +112,13 @@ app.configure(function() {
 */
 console.log("Done!");
 console.log("Building env...");
-app.use(express.static(__dirname + '/public'));
+//app.use(express.static(__dirname + '/public'));
 app.get('/env', function(req,res) {
 	res.send(JSON.stringify(process.env));
     });
+app.get('/andre',function(req,res) {
+	res.send(andreJade()); 
+});
 console.log("Done!");
 //For Brianc's sql builder--
 var golfHoles = sql.define({
@@ -123,6 +126,16 @@ var golfHoles = sql.define({
 	columns: ['player','course','tournament','practice','hole','score','fairway','goposition','wedgereg','wedgedist','wedgerough','greeninout','greenletter','putts','updownsuccess','updownbunker','updowninout']
     });
 console.log("Building add...");
+
+/* function getStuff(aName) 
+{
+    var rows = [];
+    var query =   client.query("SELECT * FROM GolfRounds WHERE player = $1", aName);
+         query.on("row",function(row) {  rows.push(row);}
+         query.on("end", function(row) {return {"Result": {"rows":rows}}; }
+         });	
+}
+*/
 function toArray(thing) {
     var res = new Array();
     for( var item in thing) 
@@ -131,10 +144,16 @@ function toArray(thing) {
 	}
     return res;
 }
+
+
+
+
+
+/*
 app.get('/add', function(req,res) {
 	insertion_form.handle(req, {
 		success: function (form) {
-		    //valid form                                                       
+		    //valid form 
 		    var arrayFix = toArray(form.data);
 		    res.writeHead(200, {'Content-Type': 'text/html'});
 		    res.write('<h1>Success!</h1>');
@@ -149,6 +168,7 @@ app.get('/add', function(req,res) {
 		}
 	    }); 
     });
+*/
 console.log("Done!");
 console.log("Pulling in css and javascript...");
 app.get('/bootstrap.css', function(req,res) {
@@ -234,6 +254,12 @@ app.get('/readjade',function(req,res) {
 	    });
     });
 console.log("Generating Carousel...");
+app.get('/vCarousel',function(req,res) {
+	var holes = new Array();
+	for( var i=0; i<req.params.nHoles;i++)
+	    holes.push(i);
+	res.send(jadeVCarousel({"Holder": {"fields":insertion_form,"holes": holes}}));
+    });
 app.get('/carouselForm', function(req,res){
 	//res.send("Stub. Adding a carousel style form input for mobile users.");
 	//res.send(jadeCarousel({"fields": [{"name": "This"},{"name": "is"}]}));
@@ -249,11 +275,11 @@ app.get('/carouselForm', function(req,res){
 		holes.push(i);
 	*/
 	for(var i=0; i<req.params.nHoles;i++)
-	    holes.push(i);
+	    {	    holes.push(i); }
 
 	//TODO: 
 	//res.send(JSON.stringify({"Holder": {"fields":insertion_form, "holes":holes}}));
-	res.send(jadeCarousel({"Holder": {"fields":JSON.stringify(insertion_form),"holes": holes}}));
+	res.send(jadeCarousel( {"fields":JSON.stringify(insertion_form),"holes": JSON.stringify(holes)}}));
 
 });
 console.log("Done!");

@@ -26,7 +26,7 @@ html(lang="en")
         div.container
          div.carousel-caption          
            form(method="post", role="form").form-horizontal
-            div.form-group
+             //div.form-group
              each field, i in Holder.hole_form.fields
               if(field.required)
                 div.field.required.form-group
@@ -38,13 +38,14 @@ html(lang="en")
                   label(for="id_"+i).col-xs-4.control-label= field.name
                   div.col-xs-6
                    input(name=field.name,id+"id_"+i).form-control
+             button(type="submit").btn.btn-default Submit
       else
        div.item
         img(data-src="holder.js/640x1136/auto/#777:#7a7a7a/text:" +i, alt=i)
         div.container
          div.carousel-caption
           form(method="post", role="form").form-horizontal
-           div.form-group
+            //div.form-group
             each field, i in Holder.hole_form.fields
               if(field.required)
                 div.field.required.form-group
@@ -56,6 +57,7 @@ html(lang="en")
                   label(for="id_"+i).col-xs-4.control-label= field.name
                   div.col-xs-6
                     input(name=field.name,id+"id_"+i).form-control
+            button(type="submit").btn.btn-default Submit
    //Controls
    a(class="left carousel-control", href="#myCarousel",data-slide="prev")
     span.glyphicon.glyphicon-chevron-left

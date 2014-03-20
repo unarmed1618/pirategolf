@@ -1,0 +1,106 @@
+table(border="5", width="100%", cellpadding="4", cellspacing="3")
+  tr
+   th 
+  tr
+   td(align="center", valign="middle")
+    b= "Hole: " + hole
+  tr
+   td(align="center", valign="middle")
+    b Score:
+    input(type="number", width="10", value="Score")
+    br
+  tr
+   td(align="center", valign="middle")   
+    b Fairway:
+    div
+     b L 
+     input(type="radio", name="Fairway", value="L")
+     br
+    div
+      b H
+      input(type="radio", name="Fairway", value="H") 
+      br
+    div
+      b R
+      input(type="radio", name="Fairway", value="R") 
+      br 
+  tr
+   td(align="center" valign="middle")
+    b  Wedge:
+    input(type="text", size="2")
+    br
+    div 
+     b REG
+     input(type="radio", name="Reg_RF", value="REG")
+     br
+    div
+      b RF
+      input(type="radio", name="Reg_RF", value="RF") 
+      br
+  tr
+   td(align="center", valign="middle")
+    b G / P:
+    div 
+     b G
+     input(type="radio", name="G_/_P", value="G") 
+     br
+    div
+      b P
+      input(type="radio", name="G_/_P", value="P" ) 
+      br
+  tr
+    td(align="center" valign="middle")
+     b Green: 
+     div 
+      b -15
+      input(type="radio", name="np15", value="-15")
+      br
+     div
+      b +15
+      input(type="radio", name="np15", value="15" ) 
+      br
+     b L
+     input(type="checkbox", name="option1", value="L") 
+     br
+     b S
+     input(type="checkbox", name="option2", value="S") 
+     br
+     b R
+     input(type="checkbox", name="option3", value="R") 
+     br
+     b O
+     input(type="checkbox", name="option4", value="O") 
+     br
+  tr
+    td(align="center", valign="middle")
+     b Putts:
+     input(type="text", size="2", value="Putts")
+     br
+  tr
+    td(align="center", valign="middle")
+     b Up & Down:
+     div 
+       b S
+       input(type="radio", name="succun", value="S") 
+       br
+     div 
+      b U
+      input(type="radio", name="succun", value="U") 
+      br
+     b B
+     input(type="checkbox", name="option5", value="B") 
+     br
+     div
+      b -5
+      input(type="radio", name="NPFIVE", value="-5" ) 
+      br
+     div
+      b +5
+      input(type="radio", name="NPFIVE", value="5" )
+      br
+  tr
+    td(align="center", valign="middle")
+      a(href="#myCarousel",data-slide="prev")
+        span.glyphicon.glyphicon-chevron-left
+      a(href="#myCarousel",data-slide="next")
+        span.glyphicon.glyphicon-chevron-right

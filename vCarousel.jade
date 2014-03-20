@@ -1,66 +1,53 @@
 doctype html
-//Vars:: holes[], fields[]
 html(lang="en")
  head 
   include includes/head
   title Carousel of Forms
+  style(type="text/css").
+    input[type="text"]{
+    color:black;
+    width:50px;
+    }
+    input[type="number"] {
+    color:black;
+    width:50px;
+    }
  body
-   //Carousel
-   //nav  //wrap things in other things.
-    //wrap the whole damn thing in a form.
-   //   a(href="http://ecu.edu",class= "h2") things
-    //form(method="get")
-   div(id= "myCarousel",class= "carousel slide", data-ride="carousel",data-interval=0)
+  //Carousel
+  //nav
+   //a(href="http://ecu.edu",class= "h2") things
+  
+  div(id= "myCarousel",class= "carousel slide", data-ride="carousel",data-interval=0)
     //Indicators
     //ol.carousel-indicators
      each hole, i in Holder.holes
-      if i == 0
+      if i == 1
        li(data-target="#myCarousel", data-slide-to=i,class="active")
       else
-       li(data-target="#myCarousel", data-slide-to=i)         
-    div.carousel-inner 
+       li(data-target="#myCarousel", data-slide-to=i)
+    div.carousel-inner
      each hole, i in Holder.holes
       if(i == 0)
        div.item.active
-        img(data-src="holder.js/640x1136/auto/#777:#7a7a7a/text:"+ i,alt="First Slide")
-        div.container
-         div.carousel-caption          
-           form(method="post", role="form").form-horizontal
-             //div.form-group
-             each field, i in Holder.hole_form.fields
-              if(field.required)
-                div.field.required.form-group
-                  label(for="id_"+i).col-xs-4.control-label= field.name
-                  div.col-xs-6
-                   input(name=field.name,id+"id_"+ i).form-control
-              else
-                div.field.form-group
-                  label(for="id_"+i).col-xs-4.control-label= field.name
-                  div.col-xs-6
-                   input(name=field.name,id+"id_"+i).form-control
-             button(type="submit").btn.btn-default Submit
-      else
-       div.item
-        img(data-src="holder.js/640x1136/auto/#777:#7a7a7a/text:" +i, alt=i)
+        img(data-src="holder.js/480x800/auto/#777:#7a7a7a/text:"+ i,alt="First Slide")
         div.container
          div.carousel-caption
-          form(method="post", role="form").form-horizontal
-            //div.form-group
-            each field, i in Holder.hole_form.fields
-              if(field.required)
-                div.field.required.form-group
-                  label(for="id_"+i).col-xs-4.control-label= field.name
-                  div.col-xs-6
-                    input(name=field.name,id+"id_"+ i).form-control
-              else
-                div.field.form-group
-                  label(for="id_"+i).col-xs-4.control-label= field.name
-                  div.col-xs-6
-                    input(name=field.name,id+"id_"+i).form-control
-            button(type="submit").btn.btn-default Submit
+          include includes/holeInclude
+      else if i == 17
+       div.item
+        img(data-src="holder.js/480x800/auto/#777:#7a7a7a/text:" +i, alt=i)
+        div.container
+         div.carousel-caption
+          include includes/holeInclude
+      else
+       div.item
+        img(data-src="holder.js/480x800/auto/#777:#7a7a7a/text:" +i, alt=i)
+        div.container
+         div.carousel-caption
+          include includes/holeInclude 
    //Controls
-   a(class="left carousel-control", href="#myCarousel",data-slide="prev")
-    span.glyphicon.glyphicon-chevron-left
-   a(class="right carousel-control",href="#myCarousel",data-slide="next")
-    span.glyphicon.glyphicon-chevron-right
-  include includes/footer 
+  //a(class="left carousel-control", href="#myCarousel",data-slide="prev")
+   //span.glyphicon.glyphicon-chevron-left
+  //a(class="right carousel-control",href="#myCarousel",data-slide="next")
+    //span.glyphicon.glyphicon-chevron-right
+  include includes/footer

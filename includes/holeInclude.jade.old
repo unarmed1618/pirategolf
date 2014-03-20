@@ -1,0 +1,80 @@
+table(border="10",  bordercolor="#FFFFFF", style="background-color:#FFFFFF", width="50%", cellpadding="4", cellspacing="3")
+  tr
+   th Hole
+  tr
+   td(align="center", valign="middle")
+    b Score:
+    input(type="text", size="2") Score
+    br
+  tr
+   td(align="center", valign="middle")
+    
+    p:b Fairway:
+    div
+     input(type="radio", name="Fairway") L 
+     br
+    div
+      input(type="radio", name="Fairway", value="H") H
+      br
+    div
+      input(type="radio", name="Fairway", value="R") R
+      br 
+  tr
+   td(align="center" valign="middle")
+    b  Wedge:
+    input(type="text", size="2") Wedge
+    br
+    div 
+     input(type="radio", name="Reg_RF", value="REG") REG
+     br
+    div
+      input(type="radio", name="Reg_RF", value="RF") RF
+      br
+  tr
+   td(align="center", valign="middle")
+    b G / P:
+    div 
+     input(type="radio", name="G_/_P", value="G") G
+     br
+    div
+      input(type="radio", name="G_/_P", value="P" ) P
+      br
+  tr
+    td(align="center" valign="middle")
+     b Green: 
+     div 
+      input(type="radio", name="np15", value="-15") -15
+      br
+     div
+      input(type="radio", name="np15", value="15" ) 15
+      br
+     input(type="checkbox", name="option1", value="L") L
+     br
+     input(type="checkbox", name="option2", value="S") S
+     br
+     input(type="checkbox", name="option3", value="R") R
+     br
+     input(type="checkbox", name="option4", value="O") O
+     br
+  tr
+   td(align="center", valign="middle")
+     b Putts:
+     input(type="text", size="2", "Putts")
+     br
+  tr
+   td(align="center", valign="middle")
+    b Up & Down:
+    div 
+     input(type="radio", name="succun", value="S") S
+     br
+    div 
+     input(type="radio", name="succun", value="U") U
+     br
+    input(type="checkbox", name="option5", value="B") B
+    br
+    div
+     input(type="radio", name="NPFIVE", value="-5" ) -5
+     br
+    div
+      input(type="radio", name="NPFIVE", value="5" ) 5
+      br

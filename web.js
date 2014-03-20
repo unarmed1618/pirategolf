@@ -10,7 +10,7 @@ var express       =   require("express"),
     connect     =   require("connect"), 
     postmark    =   require("postmark")(POSTMARK_API_KEY);
 */
-var login = require("login").postgresql;
+//var login = require("login").postgresql;
 var util = require("util");
 var jquery = require("jquery");
 var express = require("express");
@@ -31,7 +31,9 @@ var jadeTemplate = fs.readFileSync('page.jade').toString();
 var fn = jade.compile(jadeTemplate, jadeOptions);
 var jadeForm = fs.readFileSync('form.jade').toString();
 var jfm = jade.compile(jadeForm, jadeOptions);
-
+var connect = require("connect");
+var bcrypt = require("bcrypt");
+var everyauth = require("everyauth");
 //console.log("vars up except pg");
 if(process.env.PWD == "/app"||"/Users/johndarrow/pirategolfWS/pirategolf")
     var pg = require("pg").native;
@@ -45,6 +47,87 @@ var holes = [1, 2, 3,4, 5, 6, 7, 8, 9, 10, 11, 12, 13,14,15,16,17,18];
 // Local variables necessary for plugins
 // String for connecting to the database so it can be changed if necessary-
 //var conString = "postgres://zfaagftogdvhjz:pcXlJD1bP9AygIM7ivINuDOHvS@ec2-184-73-194-196.compute-1.amazonaws.com/dfcvk500ed0il4";
+var everyauth = require('everyauth')
+  , connect = require('connect');
+/*
+everyauth.password
+  .getLoginPath('/login') // Uri path to the login page
+  .postLoginPath('/login') // Uri path that your login form POSTs to
+  .loginView('a string of html; OR the name of the jade/etc-view-engine view')
+  .authenticate( function (login, password) {
+    // Either, we return a user or an array of errors if doing sync auth.
+    // Or, we return a Promise that can fulfill to promise.fulfill(user) or promise.fulfill(errors)
+    // `errors` is an array of error message strings
+    //
+    // e.g., 
+    // Example 1 - Sync Example
+
+     if (usersByLogin[login] && usersByLogin[login].password === password) {
+       return usersByLogin[login];
+     } else {
+       return ['Login failed'];
+     }
+    //
+    // Example 2 - Async Example
+//     var promise = this.Promise()
+ //    client.query("Select username, passwrd from credentials where username='$1'",[login], function (err, result) {
+   //    if (err) return promise.fulfill([err]);
+    //   promise.fulfill(result);
+    // }
+     return promise;
+
+  })
+  .loginSuccessRedirect('/') // Where to redirect to after a login
+
+    // If login fails, we render the errors via the login view template,
+    // so just make sure your loginView() template incorporates an `errors` local.
+    // See './example/views/login.jade'
+
+  .getRegisterPath('/register') // Uri path to the registration page
+  .postRegisterPath('/register') // The Uri path that your registration form POSTs to
+  .registerView('a string of html; OR the name of the jade/etc-view-engine view')
+  .validateRegistration( function (newUserAttributes) {
+    // Validate the registration input
+    // Return undefined, null, or [] if validation succeeds
+    // Return an array of error messages (or Promise promising this array)
+    // if validation fails
+    //
+    // e.g., assuming you define validate with the following signature
+    // var errors = validate(login, password, extraParams);
+    // return errors;
+    //
+    // The `errors` you return show up as an `errors` local in your jade template
+  })
+  .registerUser( function (newUserAttributes) {
+    // This step is only executed if we pass the validateRegistration step without
+    // any errors.
+    //
+    // Returns a user (or a Promise that promises a user) after adding it to
+    // some user store.
+    //
+    // As an edge case, sometimes your database may make you aware of violation
+    // of the unique login index, so if this error is sent back in an async
+    // callback, then you can just return that error as a single element array
+    // containing just that error message, and everyauth will automatically handle
+    // that as a failed registration. Again, you will have access to this error via
+    // the `errors` local in your register view jade template.
+    // e.g.,
+    //  var promise = this.Promise();
+    //  User.create(newUserAttributes, function (err, user) {
+    //   if (err) return promise.fulfill([err]);
+    //   promise.fulfill(user);
+    // });
+    // return promise;
+    //
+    // Note: Index and db-driven validations are the only validations that occur 
+    // here; all other validations occur in the `validateRegistration` step documented above.
+  })
+  .registerSuccessRedirect('/'); // Where to redirect to after a successful registration
+
+var routes = function (app) {
+  // Define your routes here
+};
+*/
 
 
 
@@ -199,7 +282,7 @@ app.get('/readjade',function(req,res) {
 //console.log("Generating Carousel...");
 app.get('/vCarousel',function(req,res) {
 //    res.send(JSON.stringify(hole_form));
-	res.send(jadeVCarousel({"Holder": {"holes":holes,"hole_form":hole_form}}));
+	res.send(jadeVCarousel({"Holder": {"holes":holes}}));
     });
 app.get('/carouselForm', function(req,res){
 	//res.send("Stub. Adding a carousel style form input for mobile users.");

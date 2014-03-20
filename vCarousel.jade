@@ -29,20 +29,22 @@ html(lang="en")
      each hole, i in Holder.holes
       if(i == 0)
        div.item.active
-        img(data-src="holder.js/480x800/auto/#777:#7a7a7a/text:"+ i,alt="First Slide")
-        div.container-fluid
-         div.carousel-caption
-          include includes/holeInclude
+        div.container-fluid 
+          img(data-src="holder.js/480x800/auto/#777:#7a7a7a/text:"+ i,alt="First Slide")
+          div.container
+           div.carousel-caption
+            include includes/holeInclude
       else if i == 17
        div.item
-        img(data-src="holder.js/480x800/auto/#777:#7a7a7a/text:" +i, alt=i)
         div.container-fluid
-         div.carousel-caption
-          include includes/holeInclude
+          img(data-src="holder.js/480x800/auto/#777:#7a7a7a/text:" +i, alt=i)
+          div.container
+           div.carousel-caption
+            include includes/holeInclude
       else
        div.item
         img(data-src="holder.js/480x800/auto/#777:#7a7a7a/text:" +i, alt=i)
-        div.container-fluid
+        div.container
          div.carousel-caption
           include includes/holeInclude 
    //Controls

@@ -30,23 +30,18 @@ html(lang="en")
       if(i == 0)
        div.item.active
         div.container-fluid 
-          img(data-src="holder.js/480x800/auto/#777:#7a7a7a/text:"+ i,alt="First Slide")
-          div.container
-           div.carousel-caption
-            include includes/holeInclude
-      else if i == 17
-       div.item
-        div.container-fluid
-          img(data-src="holder.js/480x800/auto/#777:#7a7a7a/text:" +i, alt=i)
+          img(data-src="holder.js/4000x650/auto/#777:#7a7a7a/text:"+ i,alt="First Slide")
+          
           div.container
            div.carousel-caption
             include includes/holeInclude
       else
        div.item
-        img(data-src="holder.js/480x800/auto/#777:#7a7a7a/text:" +i, alt=i)
-        div.container
-         div.carousel-caption
-          include includes/holeInclude 
+        div.container-fluid
+         img(data-src="holder.js/4000x650/auto/#777:#7a7a7a/text:" +i, alt=i)
+         div.container
+          div.carousel-caption
+           include includes/holeInclude 
    //Controls
   //a(class="left carousel-control", href="#myCarousel",data-slide="prev")
    //span.glyphicon.glyphicon-chevron-left

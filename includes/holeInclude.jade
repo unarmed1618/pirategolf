@@ -13,65 +13,61 @@ table(border="5", width="100%", cellpadding="4", cellspacing="3")
   tr
    td(align="center", valign="middle")   
     b Fairway:
-    div
-     b L 
-     input(type="radio", name="Fairway", value="L")
-     br
-    div
-      b H
-      input(type="radio", name="Fairway", value="H") 
-      br
-    div
-      b R
-      input(type="radio", name="Fairway", value="R") 
-      br 
+    div.btn-group(data-toggle="buttons")
+     label.btn.btn-primary
+      b Left
+      input(type="radio", name="Fairway", value="Left")
+     label.btn.btn-primary
+      b Hit
+      input(type="radio", name="Fairway", value="Hit") 
+     label.btn.btn-primary
+      b Right
+      input(type="radio", name="Fairway", value="Right") 
   tr
    td(align="center" valign="middle")
     b  Wedge:
     input(type="number")
-    br
-    div 
-     b REG
-     input(type="radio", name="Reg_RF", value="REG")
-     br
-    div
+    div.btn-group(data-toggle="buttons")
+     label.btn.btn-primary
+      b REG
+      input(type="radio", name="Reg_RF", value="REG")
+     label.btn.btn-primary
       b RF
-      input(type="radio", name="Reg_RF", value="RF") 
-      br
+      input(type="radio", name="Reg_RF", value="RF")      
   tr
    td(align="center", valign="middle")
     b G / P:
-    div 
-     b G
-     input(type="radio", name="G_/_P", value="G") 
-     br
-    div
-      b P
+    div.btn-group(data-toggle="buttons")
+     label.btn.btn-primary
+      b Go
+      input(type="radio", name="G_/_P", value="G") 
+     label.btn.btn-primary
+      b Position
       input(type="radio", name="G_/_P", value="P" ) 
-      br
+      
   tr
     td(align="center" valign="middle")
      b Green: 
-     div 
-      b -15
-      input(type="radio", name="np15", value="-15")
-      br
-     div
-      b +15
-      input(type="radio", name="np15", value="15" ) 
-      br
-     b L
-     input(type="checkbox", name="option1", value="L") 
-     br
-     b S
-     input(type="checkbox", name="option2", value="S") 
-     br
-     b R
-     input(type="checkbox", name="option3", value="R") 
-     br
-     b O
-     input(type="checkbox", name="option4", value="O") 
-     br
+     div.btn-group(data-toggle="buttons")
+      label.btn.btn-primary
+       b -15
+       input(type="radio", name="np15", value="-15") 
+      label.btn.btn-primary
+       b +15
+       input(type="radio", name="np15", value="15" ) 
+      label.btn.btn-primary
+       b L
+       input(type="checkbox", name="option1", value="L") 
+      label.btn.btn-primary
+       b S
+       input(type="checkbox", name="option2", value="S") 
+      label.btn.btn-primary
+       b R
+       input(type="checkbox", name="option3", value="R") 
+      label.btn.btn-primary
+       b O
+       input(type="checkbox", name="option4", value="O") 
+     
   tr
     td(align="center", valign="middle")
      b Putts:
@@ -83,14 +79,12 @@ table(border="5", width="100%", cellpadding="4", cellspacing="3")
      div 
        b S
        input(type="radio", name="succun", value="S") 
-       br
-     div 
       b U
       input(type="radio", name="succun", value="U") 
-      br
+     
      b B
      input(type="checkbox", name="option5", value="B") 
-     br
+     
      div
       b -5
       input(type="radio", name="NPFIVE", value="-5" ) 

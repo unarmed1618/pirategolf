@@ -1,40 +1,37 @@
 //Form now posts successfully to the database
-//Tasks- User Tables, User login functionality, etc, (Probably available as a drop-in)
-// - Everything else
-//Hopefully this will work. 
-//
-// web.js -- Filename 
-// This section necessary to declare plugins/extensions
-/*
-var express       =   require("express"), 
-    connect     =   require("connect"), 
-    postmark    =   require("postmark")(POSTMARK_API_KEY);
-*/
-//var login = require("login").postgresql;
-var util = require("util");
-var jquery = require("jquery");
-var express = require("express");
-var logfmt = require("logfmt");
-var fs = require('fs');
-var sql = require('sql');
-var jadeOptions = {filename: './', pretty:true };
-var jade = require('jade');
-var jadeStatsBox = fs.readFileSync('stats.jade').toString();
-var jadeStats = jade.compile(jadeStatsBox, jadeOptions);
-var jadeVCarouselBox = fs.readFileSync('vCarousel.jade').toString();
-var jadeVCarousel = jade.compile(jadeVCarouselBox, jadeOptions);
-var jadeCarouselBox = fs.readFileSync('carousel.jade').toString();
-var jadeCarousel = jade.compile(jadeCarouselBox, jadeOptions);
-var jadeTableBox = fs.readFileSync('table.jade').toString();
-var jadeTable = jade.compile(jadeTableBox, jadeOptions);
-var jadeTemplate = fs.readFileSync('page.jade').toString();
-var fn = jade.compile(jadeTemplate, jadeOptions);
-var jadeForm = fs.readFileSync('form.jade').toString();
-var jfm = jade.compile(jadeForm, jadeOptions);
-var connect = require("connect");
+
+var express = require('express'),
+    connect = require('connect'),
+    jade = require('jade'),
+//    app = module.exports = express.createServer(),
+    app = module.exports = express(),
+    mongoose = require('mongoose'),
+    mongoStore = require('connect-mongodb'),
+    mailer = require('mailer'),
+    stylus = require('stylus'),
+    markdown = require('markdown').markdown,
+    connectTimeout = require('connect-timeout'),
+    util = require('util'),
+    path = require('path'),
+    models = require('./models'),
+    db,
+    Document,
+    User,
+    LoginToken,
+    Settings = { development: {}, test: {}, production: {} },
+    emails,
+    jquery = require("jquery"),
+    logfmt = require("logfmt"),
+    fs = require('fs'),
+    sql = require('sql'),
+    jadeOptions = {filename: './', pretty:true };
+var newUserJade = 
 var bcrypt = require("bcrypt");
-var everyauth = require("everyauth");
 //console.log("vars up except pg");
+function renderJadeFile(template, options) {
+  var fn = jade.compile(template, options);
+  return fn(options.locals);
+}
 if(process.env.PWD == "/app"||"/Users/johndarrow/pirategolfWS/pirategolf")
     var pg = require("pg").native;
 else
@@ -47,87 +44,209 @@ var holes = [1, 2, 3,4, 5, 6, 7, 8, 9, 10, 11, 12, 13,14,15,16,17,18];
 // Local variables necessary for plugins
 // String for connecting to the database so it can be changed if necessary-
 //var conString = "postgres://zfaagftogdvhjz:pcXlJD1bP9AygIM7ivINuDOHvS@ec2-184-73-194-196.compute-1.amazonaws.com/dfcvk500ed0il4";
-var everyauth = require('everyauth')
-  , connect = require('connect');
-/*
-everyauth.password
-  .getLoginPath('/login') // Uri path to the login page
-  .postLoginPath('/login') // Uri path that your login form POSTs to
-  .loginView('a string of html; OR the name of the jade/etc-view-engine view')
-  .authenticate( function (login, password) {
-    // Either, we return a user or an array of errors if doing sync auth.
-    // Or, we return a Promise that can fulfill to promise.fulfill(user) or promise.fulfill(errors)
-    // `errors` is an array of error message strings
-    //
-    // e.g., 
-    // Example 1 - Sync Example
+      
 
-     if (usersByLogin[login] && usersByLogin[login].password === password) {
-       return usersByLogin[login];
-     } else {
-       return ['Login failed'];
-     }
-    //
-    // Example 2 - Async Example
-//     var promise = this.Promise()
- //    client.query("Select username, passwrd from credentials where username='$1'",[login], function (err, result) {
-   //    if (err) return promise.fulfill([err]);
-    //   promise.fulfill(result);
-    // }
-     return promise;
+emails = {
+  send: function(template, mailOptions, templateOptions) {
+    mailOptions.to = mailOptions.to;
+    renderJadeFile(path.join(__dirname, 'views', 'mailer', template), templateOptions, function(err, text) {
+      // Add the rendered Jade template to the mailOptions
 
-  })
-  .loginSuccessRedirect('/') // Where to redirect to after a login
+// Only send mails in production                                        
+      mailOptions.body = text;
+      // Merge the app's mail options                             
+      var keys = Object.keys(app.set('mailOptions')),
+          k;
+      for (var i = 0, len = keys.length; i < len; i++) {
+        k = keys[i];
+        if (!mailOptions.hasOwnProperty(k))
+          mailOptions[k] = app.set('mailOptions')[k]
+      }
 
-    // If login fails, we render the errors via the login view template,
-    // so just make sure your loginView() template incorporates an `errors` local.
-    // See './example/views/login.jade'
+      console.log('[SENDING MAIL]', util.inspect(mailOptions)); 
+      if (app.settings.env == 'production') {
+        mailer.send(mailOptions,
+          function(err, result) {
+            if (err) {
+              console.log(err);
+            }
+          }
+		    );
+      }
+    });
+  },
 
-  .getRegisterPath('/register') // Uri path to the registration page
-  .postRegisterPath('/register') // The Uri path that your registration form POSTs to
-  .registerView('a string of html; OR the name of the jade/etc-view-engine view')
-  .validateRegistration( function (newUserAttributes) {
-    // Validate the registration input
-    // Return undefined, null, or [] if validation succeeds
-    // Return an array of error messages (or Promise promising this array)
-    // if validation fails
-    //
-    // e.g., assuming you define validate with the following signature
-    // var errors = validate(login, password, extraParams);
-    // return errors;
-    //
-    // The `errors` you return show up as an `errors` local in your jade template
-  })
-  .registerUser( function (newUserAttributes) {
-    // This step is only executed if we pass the validateRegistration step without
-    // any errors.
-    //
-    // Returns a user (or a Promise that promises a user) after adding it to
-    // some user store.
-    //
-    // As an edge case, sometimes your database may make you aware of violation
-    // of the unique login index, so if this error is sent back in an async
-    // callback, then you can just return that error as a single element array
-    // containing just that error message, and everyauth will automatically handle
-    // that as a failed registration. Again, you will have access to this error via
-    // the `errors` local in your register view jade template.
-    // e.g.,
-    //  var promise = this.Promise();
-    //  User.create(newUserAttributes, function (err, user) {
-    //   if (err) return promise.fulfill([err]);
-    //   promise.fulfill(user);
-    // });
-    // return promise;
-    //
-    // Note: Index and db-driven validations are the only validations that occur 
-    // here; all other validations occur in the `validateRegistration` step documented above.
-  })
-  .registerSuccessRedirect('/'); // Where to redirect to after a successful registration
-
-var routes = function (app) {
-  // Define your routes here
+  sendWelcome: function(user) {
+    this.send('welcome.jade', { to: user.email, subject: 'Welcome to Nodepad' }, { locals: { user: user } });
+  }
 };
-*/
+
+//app.helpers(require('./helpers.js').helpers);
+//app.dynamicHelpers(require('./helpers.js').dynamicHelpers);
+
+app.configure('development', function() {
+  app.set('db-uri', 'mongodb://localhost/nodepad-development');
+  app.use(express.errorHandler({ dumpExceptions: true }));
+  app.set('view options', {
+    pretty: true
+  });
+});
+
+app.configure('test', function() {
+  app.set('db-uri', 'mongodb://localhost/nodepad-test');
+  app.set('view options', {
+    pretty: true
+  });
+});
+
+app.configure('production', function() {
+  app.set('db-uri', 'mongodb://localhost/nodepad-production');
+});
+app.configure(function() {
+  app.set('views', __dirname + '/views');
+  app.use(express.favicon());
+  app.use(express.bodyParser());
+  app.use(express.cookieParser());
+  app.use(connectTimeout({ time: 10000 }));
+  app.use(express.session({ store: mongoStore(app.set('db-uri')), secret: 'topsecret' }));
+  app.use(express.logger({ format: '\x1b[1m:method\x1b[0m \x1b[33m:url\x1b[0m :response-time ms' }))
+  app.use(express.methodOverride());
+  app.use(stylus.middleware({ src: __dirname + '/public' }));
+  app.use(express.static(__dirname + '/public'));
+  app.set('mailOptions', {
+    host: 'localhost',
+    port: '25',
+    from: 'nodepad@example.com'
+  });
+});
+
+models.defineModels(mongoose, function() {
+ // app.Document = Document = mongoose.model('Document');
+  app.User = User = mongoose.model('User');
+  app.LoginToken = LoginToken = mongoose.model('LoginToken');
+  db = mongoose.connect(app.set('db-uri'));
+})
+
+function authenticateFromLoginToken(req, res, next) {
+  var cookie = JSON.parse(req.cookies.logintoken);
+
+  LoginToken.findOne({ email: cookie.email,
+                       series: cookie.series,
+                       token: cookie.token }, (function(err, token) {
+    if (!token) {
+      res.redirect('/sessions/new');
+      return;
+    }
+
+    User.findOne({ email: token.email }, function(err, user) {
+      if (user) {
+       req.session.user_id = user.id;
+        req.currentUser = user;
+
+        token.token = token.randomToken();
+        token.save(function() {
+          res.cookie('logintoken', token.cookieValue, { expires: new Date(Date.now() + 2 * 604800000), path: '/' });
+          next();
+        });
+      } else {
+        res.redirect('/sessions/new');
+     }
+    });
+  }));
+}
+
+function loadUser(req, res, next) {
+  if (req.session.user_id) {
+    User.findById(req.session.user_id, function(err, user) {
+      if (user) {
+        req.currentUser = user;
+        next();
+      } else {
+        res.redirect('/sessions/new');
+      }
+    });
+  } else if (req.cookies.logintoken) {
+    authenticateFromLoginToken(req, res, next);
+  } else {
+    res.redirect('/sessions/new');
+  }
+}
+// Users                                                                        
+app.get('/users/new', function(req, res) {
+  res.render('users/new.jade', {
+    locals: { user: new User() }
+  });
+});
+
+app.post('/users.:format?', function(req, res) {
+  var user = new User(req.body.user);
+
+  function userSaveFailed() {
+    req.flash('error', 'Account creation failed');
+    res.render('users/new.jade', {
+      locals: { user: user }
+    });
+  }
+
+  user.save(function(err) {
+    if (err) return userSaveFailed();
+
+req.flash('info', 'Your account has been created');
+    emails.sendWelcome(user);
+
+    switch (req.params.format) {
+      case 'json':
+        res.send(user.toObject());
+      break;
+
+      default:
+        req.session.user_id = user.id;
+        res.redirect('/');
+    }
+  });
+});
+
+// Sessions                                                                   
+console.log("loading up sessions/new");
+app.get('/sessions/new', function(req, res) {
+  res.send(newUserJade({user: new User()}));
+//  res.render('sessions/new.jade', {
+ //   locals: { user: new User() }
+  });
+});
+console.log("sessions/new loaded");
+app.post('/sessions', function(req, res) {
+  User.findOne({ email: req.body.user.email }, function(err, user) {
+    if (user && user.authenticate(req.body.user.password)) {
+      req.session.user_id = user.id;
+
+      // Remember me                                          
+      if (req.body.remember_me) {
+        var loginToken = new LoginToken({ email: user.email });
+        loginToken.save(function() {
+          res.cookie('logintoken', loginToken.cookieValue, { expires: new Date(Date.now() + 2 * 604800000), path: '/' });
+          res.redirect('/');
+        });
+      } else {
+        res.redirect('/');
+      }
+    } else {
+      req.flash('error', 'Incorrect credentials');
+      res.redirect('/sessions/new');
+    }
+  });
+
+});
+
+app.del('/sessions', loadUser, function(req, res) {
+  if (req.session) {
+    LoginToken.remove({ email: req.currentUser.email }, function() {});
+    res.clearCookie('logintoken');
+    req.session.destroy(function() {});
+  }
+  res.redirect('/sessions/new');
+});
+
 
 
 
@@ -149,70 +268,16 @@ var fields = forms.fields, validators = forms.validators, widgets = forms.valida
 
 
 
-var buff = "Database:"; // For a string to append a full read to
-//console.log("Attempting to connect to DB...");
-//client.connect(); //To actually establish a connection TODO: Use a client pool instead of this.
-//console.log("Done!");
-//express local 
-//console.log("Creating express...");
-var app = express();
-var hole_form = forms.create({
-     hole_score: fields.number({required:true, widget: widgets.number}),
-     fairway: fields.string({required:true, maxlength:1,widget: widgets.text}),
-     goposition: fields.string ({required:true, maxlength:1,widget: widgets.text}),
-     stroke_in_reg: fields.string ({required:true,maxlength:1,widget: widgets.text}),
-     stroke_in_ruff: fields.string ({required:true,maxlength:1,widget: widgets.text}),
-     wedgedist: fields.number ({required:true,widget : widgets.number}),
-     greeninout: fields.number ({required:true,widget : widgets.number}),
-     where_on_green: fields.string ({required:true, maxlength:1,widget : widgets.text}),
-     putts: fields.number ({required:true,widget : widgets.number}),
-     updown_success:fields.number ({required:true,widget : widgets.number}),
-     updown_bunker:fields.number({required:true,widget : widgets.number}),
-     updown_inside5:fields.number({required:true,widget : widgets.number})
-}
+var buff = "Database:"; 
 
-);
-//var holes = new Array();
-/*fs.readFile("hole_form.json","utf8",function(err,data) {
-        if(err) throw err;
-        hole_form = forms.create(JSON.parse(data));
-    });
-*/
 app.use(express.static(__dirname + '/publicstatic'));
 
-app.use(logfmt.requestLogger()); //logfmt hook
+//app.use(logfmt.requestLogger()); //logfmt hook
 
-//This is called at pirategolf.heroku.com/add
-// req == the request's parameters
-// res == the response
+//app.get('/env', function(req,res) {
+//	res.send(JSON.stringify(process.env));
+//    });
 
-// res.send is a function that builds the response
-
-
-//console.log("Running configure...");
-/*
-pg.connect(config.postgresql, function (err, db) {
-  var auth = login(app, db, postmark, { 
-    app_name: "Magical Application", 
-    base_url: "http://unicorn.example.com", 
-    from: "donotreply@example.com"
-  });.
-});
-*/
-
-//console.log("Done!");
-//console.log("Building env...");
-//app.use(express.static(__dirname + '/public'));
-app.get('/env', function(req,res) {
-	res.send(JSON.stringify(process.env));
-    });
-//console.log("Done!");
-//For Brianc's sql builder--
-var golfHoles = sql.define({
-	name: 'GolfRounds',
-	columns: ['player','course','tournament','practice','hole','score','fairway','goposition','wedgereg','wedgedist','wedgerough','greeninout','greenletter','putts','updownsuccess','updownbunker','updowninout']
-    });
-//console.log("Building add...");
 
 function toArray(thing) {
     var res = new Array();
@@ -243,69 +308,12 @@ app.get('/readspc', function(req,res) {
 	res.send(JSON.stringify(req));
 
 });
-app.get('/holeForm',function(req,res) {
-//var holes = new Array();
-   // for( var i=0; i<18;i++)
- //       holes.push(i+1);
-//    res.send(JSON.stringify(holes));
-    var stuff = {"holes": holes, "holeForm": hole_form};
-    res.send(JSON.stringify(stuff));
 
-});
-/*
-app.get('/read',function(req,res) {
-var query = client.query('SELECT 1 FROM GolfRounds');
-        query.on('row', function(row) {
-                res.send(JSON.stringify(row));
-	    });
-	
-    });
-*/
-// TODO: Make this respond to req params and build a query.
-//Pulls all files in the golfrounds table.
-
-app.get('/formtest', function(req,res) {
-	res.send(JSON.stringify(hole_form));
-
-    });
-//Designed to use Jade to clean up the output into a table
-app.get('/readjade',function(req,res) {
-	var rows = [];
-	var query = client.query('SELECT * FROM GolfRounds');
-	query.on('row', function(row){
-		rows.push(row);
-	    });
-	query.on('end', function(row){
-		res.send(jadeTable({"Result": {"rows": rows}}));
-	    });
-    });
 //console.log("Generating Carousel...");
-app.get('/vCarousel',function(req,res) {
+app.get('/vCarousel',loadUser,function(req,res) {
 //    res.send(JSON.stringify(hole_form));
-	res.send(jadeVCarousel({"Holder": {"holes":holes}}));
+        res.render('vCarousel.jade',{"Holder": {"holes":holes}});
     });
-app.get('/carouselForm', function(req,res){
-	//res.send("Stub. Adding a carousel style form input for mobile users.");
-	//res.send(jadeCarousel({"fields": [{"name": "This"},{"name": "is"}]}));
-	var holes = new Array();
-	/*
-	if(req.params.nHoles == 1)
-	    holes.push(1);
-	else if(req.params.nHoles == 9)
-	    for(var i= 0; i <9; i++)
-		holes.push(i);
-	else if(req.params.nHoles == 18)
-	    for(var i=0; i<18; i++)
-		holes.push(i);
-	*/
-	for(var i=0; i<18;i++)
-	    {	    holes.push(i); }
-
-	//TODO: 
-	//res.send(JSON.stringify({"Holder": {"fields":insertion_form, "holes":holes}}));
-	res.send(jadeCarousel(JSON.stringify( {"fields":JSON.stringify(hole_form),"holes": JSON.stringify(holes)})));
-
-});
 //console.log("Done!");
 app.get('/edit', function(req,res) {
 	//if(req.

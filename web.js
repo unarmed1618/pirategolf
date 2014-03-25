@@ -25,7 +25,8 @@ var express = require('express'),
     fs = require('fs'),
     sql = require('sql'),
     jadeOptions = {filename: './', pretty:true };
-var newUserJade = 
+//var jadeStatsBox = fs.readFileSync('new.jade').toString();
+//var newUserJade = jade.compile(jadeStatsBox, jadeOptions);
 var bcrypt = require("bcrypt");
 //console.log("vars up except pg");
 function renderJadeFile(template, options) {
@@ -102,12 +103,13 @@ app.configure('test', function() {
 app.configure('production', function() {
   app.set('db-uri', 'mongodb://localhost/nodepad-production');
 });
+
 app.configure(function() {
   app.set('views', __dirname + '/views');
   app.use(express.favicon());
   app.use(express.bodyParser());
   app.use(express.cookieParser());
-  app.use(connectTimeout({ time: 10000 }));
+  //app.use(connectTimeout({ time: 10000 }));
   app.use(express.session({ store: mongoStore(app.set('db-uri')), secret: 'topsecret' }));
   app.use(express.logger({ format: '\x1b[1m:method\x1b[0m \x1b[33m:url\x1b[0m :response-time ms' }))
   app.use(express.methodOverride());
@@ -209,9 +211,9 @@ req.flash('info', 'Your account has been created');
 // Sessions                                                                   
 console.log("loading up sessions/new");
 app.get('/sessions/new', function(req, res) {
-  res.send(newUserJade({user: new User()}));
-//  res.render('sessions/new.jade', {
- //   locals: { user: new User() }
+//  res.write(newUserJade({locals: {user: new User()}}));
+  res.render('sessions/new.jade', {
+    locals: { user: new User() }
   });
 });
 console.log("sessions/new loaded");
@@ -272,11 +274,11 @@ var buff = "Database:";
 
 app.use(express.static(__dirname + '/publicstatic'));
 
-//app.use(logfmt.requestLogger()); //logfmt hook
+app.use(logfmt.requestLogger()); //logfmt hook
 
-//app.get('/env', function(req,res) {
-//	res.send(JSON.stringify(process.env));
-//    });
+app.get('/env', function(req,res) {
+	res.send(JSON.stringify(process.env));
+    });
 
 
 function toArray(thing) {
@@ -328,6 +330,9 @@ app.get('/edit', function(req,res) {
 //console.log("Generating port...");
 var port = process.env.PORT || 5000;
 app.listen(port, function() {
-	//console.log("Listening on " + port);
-    });
+	console.log("Listening on " + port);
+//console.log('Express server listening on port %d, environment: %s', app.address().port, app.settings.env)
+  console.log('Using connect %s, Express %s, Jade %s', connect.version, express.version, jade.version); 
+
+   });
 //console.log("Done!");

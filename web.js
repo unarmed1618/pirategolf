@@ -3,8 +3,8 @@
 var express = require('express'),
     connect = require('connect'),
     jade = require('jade'),
-//    app = module.exports = express.createServer(),
-    app = module.exports = express(),
+    app = module.exports = express.createServer(),
+//    app = module.exports = express(),
     mongoose = require('mongoose'),
     mongoStore = require('connect-mongodb'),
     mailer = require('mailer'),
@@ -82,8 +82,8 @@ emails = {
   }
 };
 
-//app.helpers(require('./helpers.js').helpers);
-//app.dynamicHelpers(require('./helpers.js').dynamicHelpers);
+app.helpers(require('./helpers.js').helpers);
+app.dynamicHelpers(require('./helpers.js').dynamicHelpers);
 
 app.configure('development', function() {
   app.set('db-uri', 'mongodb://localhost/nodepad-development');
@@ -156,7 +156,18 @@ function authenticateFromLoginToken(req, res, next) {
     });
   }));
 }
-
+function loadUserPassive(req,res,next) {
+    if (req.session.user_id) {
+	User.findByID(req.session.user_id, function(err,user) {
+	    if (user) {
+		req.currentUser = user;
+		next();
+	    }  else {
+		next();
+		}
+});
+}
+}
 function loadUser(req, res, next) {
   if (req.session.user_id) {
     User.findById(req.session.user_id, function(err, user) {
@@ -173,7 +184,12 @@ function loadUser(req, res, next) {
     res.redirect('/sessions/new');
   }
 }
-// Users                                                                        
+app.get('/loadnav', loadUserPassive, function(req,res) {
+    res.redirect('/BannerPage.html');
+
+});
+
+// Users                                                               
 app.get('/users/new', function(req, res) {
   res.render('users/new.jade', {
     locals: { user: new User() }
@@ -203,20 +219,18 @@ req.flash('info', 'Your account has been created');
 
       default:
         req.session.user_id = user.id;
-        res.redirect('/');
+        res.redirect('/Landing.html');
     }
   });
 });
 
 // Sessions                                                                   
-console.log("loading up sessions/new");
 app.get('/sessions/new', function(req, res) {
 //  res.write(newUserJade({locals: {user: new User()}}));
   res.render('sessions/new.jade', {
     locals: { user: new User() }
   });
 });
-console.log("sessions/new loaded");
 app.post('/sessions', function(req, res) {
   User.findOne({ email: req.body.user.email }, function(err, user) {
     if (user && user.authenticate(req.body.user.password)) {
@@ -226,11 +240,11 @@ app.post('/sessions', function(req, res) {
       if (req.body.remember_me) {
         var loginToken = new LoginToken({ email: user.email });
         loginToken.save(function() {
-          res.cookie('logintoken', loginToken.cookieValue, { expires: new Date(Date.now() + 2 * 604800000), path: '/' });
-          res.redirect('/');
+          res.cookie('logintoken', loginToken.cookieValue, { expires: new Date(Date.now() + 2 * 604800000), path: '/Landing.html' });
+          res.redirect('/Landing.html');
         });
-      } else {
-        res.redirect('/');
+      } else {//no remember
+        res.redirect('/Landing.html');
       }
     } else {
       req.flash('error', 'Incorrect credentials');

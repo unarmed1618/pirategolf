@@ -1,4 +1,5 @@
-<HTML><BODY background="PirateGolfPics/NewPirateGolfBanner.jpg" link="#ffffff" vlink="#ffffff" alink="#ffffff"><center><BR><BR><BR><BR><BR>
+<HTML><HEAD>
+<script src="jQuery.js"></script></HEAD><BODY background="PirateGolfPics/NewPirateGolfBanner.jpg" link="#ffffff" vlink="#ffffff" alink="#ffffff"><center><BR><BR><BR><BR><BR>
 <a href="Landing.html" target="main"><img src="PirateGolfPics/PNG Files/HomeButton.png"></a>
 &nbsp&nbsp<a href="ManageUsers.html" target="main">Manage users</a>
 &nbsp&nbsp<a href="ViewStatsSelect.html" target="main">View stats</a>
@@ -7,3 +8,7 @@
 &nbsp&nbsp<a href="vCarousel" target="main">Mobile input</a>
 &nbsp&nbsp<a href="EnterStatsForm.html" target="main">Enter scores</a>
 &nbsp&nbsp<a href="LoginPage.html" onClick="window.alert(&quot;You have been logged out&quot;);" target="main">Logout</a></center></BODY></HTML>
+&nbsp&nbsp<a href="Landing.html" target="main"> You are: <p id="userName"></p></a>
+<script>
+document.getElementById("userName".innerHTML=jQuery.url.param("currentUser"));
+</script>

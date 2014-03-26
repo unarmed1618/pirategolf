@@ -1,0 +1,29 @@
+.page
+ include includes/head
+ nav.navbar.navbar-default(role=navigation)
+  div.container-fluid
+    div.navbar-header
+      button(type=button,class=navbar-toggle,data-toggle=collapse,data-target=#this-navbar-collapse)
+        span.sr-only Toggle navigation
+        span.icon-bar
+        span.icon-bar
+        span.icon-bar
+      a.navbar-brand(href="#") 
+        img(src="PirateGolfPics/PNG Files/HomeButton.png")
+    div.collapse.navbar-collapse(id=this-navbar-collapse)
+      ul.nav.navbar-nav
+        li
+          a(href="ManageUsers.html", target=main) Manage users
+        li
+          a(href="ViewStatsSelect.html", target=main) View stats
+        li
+          a(href="ManageCourses.html", target=main) Manage courses
+        li
+          a(href="ManageViewableStatsSelect.html", target=main) Manage viewable stats
+        li
+          a(href="vCarousel",target=main) Mobile input
+        li
+          a(href="EnterStatsForm.html", target=main) Enter Scores
+        li
+          a(href="LoginPage.html" onClick="window.alert(&quot;You have been logged out&quot;);", target=main) Logout
+  include includes/footer

@@ -86,7 +86,7 @@ app.helpers(require('./helpers.js').helpers);
 app.dynamicHelpers(require('./helpers.js').dynamicHelpers);
 
 app.configure('development', function() {
-  app.set('db-uri', 'mongodb://localhost/nodepad-development');
+  app.set('db-uri', 'mongodb://human:human@ds035448.mongolab.com:35448/heroku_app21249341');
   app.use(express.errorHandler({ dumpExceptions: true }));
   app.set('view options', {
     pretty: true
@@ -94,14 +94,14 @@ app.configure('development', function() {
 });
 
 app.configure('test', function() {
-  app.set('db-uri', 'mongodb://localhost/nodepad-test');
+  app.set('db-uri', 'mongodb://human:human@ds035448.mongolab.com:35448/heroku_app21249341');
   app.set('view options', {
     pretty: true
   });
 });
 
 app.configure('production', function() {
-  app.set('db-uri', 'mongodb://localhost/nodepad-production');
+  app.set('db-uri', 'mongodb://human:human@ds035448.mongolab.com:35448/heroku_app21249341');
 });
 
 app.configure(function() {
@@ -157,12 +157,14 @@ function authenticateFromLoginToken(req, res, next) {
   }));
 }
 function loadUserPassive(req,res,next) {
+console.log
     if (req.session.user_id) {
 	User.findByID(req.session.user_id, function(err,user) {
 	    if (user) {
 		req.currentUser = user;
 		next();
 	    }  else {
+		req.currentUser = "Not Logged In";
 		next();
 		}
 });
@@ -184,8 +186,9 @@ function loadUser(req, res, next) {
     res.redirect('/sessions/new');
   }
 }
-app.get('/loadnav', loadUserPassive, function(req,res) {
-    res.redirect('/BannerPage.html');
+app.get('/loadNav', loadUserPassive, function(req,res) {
+console.log('loading nav');
+res.render('banner.jade', { locals: { currentUser: req.currentUser}});
 
 });
 

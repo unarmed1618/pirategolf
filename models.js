@@ -1,7 +1,12 @@
 var crypto = require('crypto'),
     Document,
     User,
-    LoginToken;
+    LoginToken,
+    Team,
+    GameHole,
+    Game,
+    CourseHole,
+    Course;
 
 function extractKeywords(text) {
   if (!text) return [];
@@ -38,6 +43,98 @@ function defineModels(mongoose, fn) {
   });
 
   /**
+    * Model: Team  
+    */
+    Team = new Schema({
+	
+	'team_name' : String,
+	'team_description' : String,
+	'status' : String,
+	'members' : [ObjectId]
+    });
+    Team.virtual('id')
+	.get(function() {
+	    return this._id.toHexString();
+	});
+  /**
+    * Model: GameHoles
+    */
+GameHole = new Schema({
+'gameid' : ObjectId,
+'userid' : ObjectId,
+'holeid' : ObjectId,
+'holenum' : Integer,
+'holescore' : Integer,
+'fairway' : String,
+'goposition' : String,
+'stroke_in_reg' : String,
+'stroke_in_rough' : String,
+'wedgedist' : String,
+'greeninout' : String,
+'where_on_green' : String,
+'putts' : String,
+'updown_success' : String,
+'updown_bunker' : String,
+'updown_inside_5' : String,
+'score_to_par': Integer
+});
+  GameHole.virtual('id')
+    .get(function() {
+      return this._id.toHexString();
+    });
+  /**
+    * Model: Game
+    */
+Game = new Schema({
+'user_id': ObjectId,
+'course_id': ObjectId,
+'game_type': String,
+'game_date': String,
+'total_score': Integer,
+'adjusted_score': Integer,
+'holes_played': Integer,
+'game_completed': String,
+'total_score_to_par': Integer,
+'average_score': String
+
+)};
+ Game.virtual('id')
+    .get(function() {
+      return this._id.toHexString();
+    });
+  /**
+    * Model: CourseHole
+    */
+    CourseHole = new Schema({
+	'course_id': ObjectId,
+	'hole_num' : Integer,
+	'hole_par' : Integer,
+	'green_type' : String,
+	'status' : String,
+	'activity date' : String
+    });
+    CourseHole.virtual('id')
+	.get(function() {
+	    return this._id.toHexString();
+	});
+  /**
+    * Model: Course -- Holds the holes
+    */
+Course = new Schema({
+'course_name' : String,
+'number_of_holes' : Integer,
+'course_description' : String,
+'course_location' : String,
+'has_pic': String,
+'pic_location': String,
+'status' : String,
+'par_total' : Integer
+});
+    Course.virtual('id')
+        .get(function() {
+            return this._id.toHexString();
+        });
+  /**
     * Model: User -- User is combined with credentials.
     */
   function validatePresenceOf(value) {
@@ -53,7 +150,10 @@ function defineModels(mongoose, fn) {
     'usertype' : String,
     'phone' : String,
     'status' : String,
-    'activityDate' : String,
+      'activityDate' : String,
+      'failedAttempts' : Integer,
+      'account_lock' : String,
+      'hint' : String,
     'hashed_password': String,
     'salt': String
   });
@@ -129,7 +229,11 @@ function defineModels(mongoose, fn) {
   mongoose.model('Document', Document);
   mongoose.model('User', User);
   mongoose.model('LoginToken', LoginToken);
-
+  mongoose.model('Team', Team);
+  mongoose.model('GameHole', GameHole);
+  mongoose.model('Game', Game);
+  mongoose.model('CourseHole', CourseHole);
+  mongoose.model('Course', Course);
   fn();
 }
 

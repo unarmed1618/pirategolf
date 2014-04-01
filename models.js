@@ -38,7 +38,7 @@ function defineModels(mongoose, fn) {
   });
 
   /**
-    * Model: User
+    * Model: User -- User is combined with credentials.
     */
   function validatePresenceOf(value) {
     return value && value.length;
@@ -46,6 +46,14 @@ function defineModels(mongoose, fn) {
 
   User = new Schema({
     'email': { type: String, validate: [validatePresenceOf, 'an email is required'], index: { unique: true } },
+    'lastname' : String,
+    'firstname' : String,
+    'displayname' : String,
+    'username' : String,
+    'usertype' : String,
+    'phone' : String,
+    'status' : String,
+    'activityDate' : String,
     'hashed_password': String,
     'salt': String
   });

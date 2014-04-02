@@ -17,7 +17,12 @@ var express = require('express'),
     db,
     Document,
     User,
+    Team,
     LoginToken,
+    Course,
+    CourseHole,
+    Game,
+    GameHole,
     Settings = { development: {}, test: {}, production: {} },
     emails,
     jquery = require("jquery"),
@@ -126,6 +131,12 @@ models.defineModels(mongoose, function() {
  // app.Document = Document = mongoose.model('Document');
   app.User = User = mongoose.model('User');
   app.LoginToken = LoginToken = mongoose.model('LoginToken');
+  app.Team = Team = mongoose.model('Team');
+  app.Course = Course = mongoose.model('Course');
+  app.CourseHole = CourseHole = mongoose.model('CourseHole');
+  app.Game = Game =mongoose.model('Game');
+  app.GameHole = GameHole = mongoose.model('GameHole');
+
   db = mongoose.connect(app.set('db-uri'));
 })
 
@@ -157,17 +168,22 @@ function authenticateFromLoginToken(req, res, next) {
   }));
 }
 function loadUserPassive(req,res,next) {
-console.log
+console.log("Entered passiveLoad");
     if (req.session.user_id) {
+	console.log("Entered If");
 	User.findByID(req.session.user_id, function(err,user) {
 	    if (user) {
+		console.log("Found User");
 		req.currentUser = user;
 		next();
 	    }  else {
-		req.currentUser = "Not Logged In";
+		console.log("User not Found");
 		next();
 		}
 });
+} else {
+    console.log("No user logged in");
+    next();
 }
 }
 function loadUser(req, res, next) {
@@ -187,20 +203,82 @@ function loadUser(req, res, next) {
   }
 }
 app.get('/loadNav', loadUserPassive, function(req,res) {
-console.log('loading nav');
-res.render('banner.jade', { locals: { currentUser: req.currentUser}});
+
+ //res.render('banner.jade', { locals: { currentUser: req.currentUser}});
+
+
+res.redirect('/BannerPage.html');
+
 
 });
 
+
+app.post('/AddCourseForm.html', function(req,res) {
+    var c = new Course();
+    var rp = req.body;
+    console.log(rp.course_name);
+    c.course_name = rp.course_name;
+    c.number_of_holes = rp.numholes;
+    c.course_description = rp.description;
+    c.course_location = rp.location;
+    c.green_type = rp.greentype;
+    c.status = "Active";
+    var total = 0;
+//    var courseholes = new Array();
+    var coursepars = [rp.hole1par,rp.hole2par,rp.hole3par,rp.hole4par,rp.hole5par,rp.hole6par,rp.hole7par, rp.hole8par, rp.hole9par, rp.hole10par,rp.hole11par,rp.hole12par,rp.hole13par,rp.hole14par,rp.hole15par,rp.hole16par,rp.hole17par, rp.hole18par]; 
+    
+    for(var i =1; i<=parseInt(rp.numholes); i++)
+    {
+	console.log("In Array");
+	ch = new CourseHole();
+	ch.course_id = c.id;
+	ch.hole_num = i;
+	ch.hole_par = coursepars[i];
+	ch.save();
+	total += parseInt(coursepars[i]);
+    }
+	c.par_total = total;
+c.save();    
+});
+
+app.get('/course/:id?', function(req, res) {
+});
+app.put('/course/:id?',function(req, res) {
+});
+app.del('/course/:id?',function(req, res) {
+});
+/*
+// Courses                                                              
+app.post('/course.:format?', function(req,res) {
+});
+app.get('/course/:id?', function(req, res) {
+});
+app.put('/course/:id?',function(req, res) {
+});
+app.del('/course/:id?',function(req, res) {
+});
+// Courses
+app.post('/course.:format?', function(req,res) {
+});
+app.get('/course/:id?', function(req, res) {
+});
+app.put('/course/:id?', function(req, res) {
+});
+app.del('/course/:id?', function(req, res) {
+});
+*/
 // Users                                                               
 app.get('/users/new', function(req, res) {
   res.render('users/new.jade', {
-    locals: { user: new User() }
+    locals: { user: new User()  }
   });
 });
 
 app.post('/users.:format?', function(req, res) {
   var user = new User(req.body.user);
+client.query("INSERT INTO users (user_id, last_name, first_name, display_name, username, user_type, email_address, phone, activity_date) VALUES ( $1, $2, $3, $4, $5, $6, $7, NOW())", [56, user.last_name, user.first_name, user.displayname, user.username, user.usertype, user.email, user.phone ], function(err, result){
+//console.log(result.rows[0]);
+});
 
   function userSaveFailed() {
     req.flash('error', 'Account creation failed');
@@ -211,7 +289,7 @@ app.post('/users.:format?', function(req, res) {
 
   user.save(function(err) {
     if (err) return userSaveFailed();
-
+ 
 req.flash('info', 'Your account has been created');
     emails.sendWelcome(user);
 

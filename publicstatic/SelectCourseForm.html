@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<script language="javascript" type="text/javascript" src="JavaScript/datetimepicker.js">
+</script>
+
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Untitled Document</title>
+</head>
+
+<body bgcolor=D7CAE6>
+<p align="center">Select Course </p>
+<p align="center">&nbsp;</p>
+<form id="form2" name="form2" action="EnterStatsForm.html">
+  <label>
+  <div align="center">
+    <p>Select Course
+      <select name="CourseName" id="CourseName">
+        <option selected="selected">CourseA</option>
+        <option>CourseB</option>
+        <option>CourseC</option>
+        <option>CourseX</option>
+        <option>SomeOtherCourse</option>
+      </select>
+  </p>
+    <p>
+      <label>Select Player
+      <select name="PlayerName" id="PlayerName">
+        <option selected="selected">Player1</option>
+        <option>Player2</option>
+        <option>Player3</option>
+        <option>PlayerX</option>
+        <option>TheBestGolferInTheWorld</option>
+      </select>
+      </label>
+</p>
+    <p>
+      <label>Game Type
+      <select name="GameType" id="GameType">
+        <option>Tournament</option>
+        <option selected="selected">Practice</option>
+        <option>Qualifier</option>
+      </select>
+      </label>
+    </p>
+    <p>Game Holes 
+      <script type="text/javascript">
+<!--
+function change_input()
+   {
+   var Select;
+   var Input;
+   
+   Select = document.getElementById('NumHoles');
+   Input = document.getElementById('input');
+   
+   if (Select.value == 'Other')
+      {
+      Input.innerHTML = '<input type="text" name="ExactNumHoles" value="" size = "1">';
+      }
+   else
+      {
+      Input.innerHTML = '';
+      }
+   }
+//-->
+</script>
+
+  <select name="NumHoles" id="NumHoles" onchange="change_input();">
+    <option selected="selected">18</option>
+    <option>9</option>
+    <option>Other</option>
+   </select>
+   
+   <span id="input"></span>
+    </p>
+   
+    <p>Date 
+      <input name="Date" type="text" id="demo1" size="25">
+    <a href="javascript:NewCal('demo1','ddmmyyyy')"><img src="PirateGolfPics/cal.gif" width="16" height="16" border="0" alt="Pick a date"></a></p>
+  </div>
+  </label>
+
+<p align="center">&nbsp;</p>
+
+  <div align="center">
+    <input name="Submit" type="submit" value="Submit" />
+  </div>
+</form>
+</body>
+</html>

@@ -63,8 +63,8 @@ GameHole = new Schema({
 'gameid' : ObjectId,
 'userid' : ObjectId,
 'holeid' : ObjectId,
-'holenum' : Integer,
-'holescore' : Integer,
+'holenum' : String,
+'holescore' : String,
 'fairway' : String,
 'goposition' : String,
 'stroke_in_reg' : String,
@@ -76,7 +76,7 @@ GameHole = new Schema({
 'updown_success' : String,
 'updown_bunker' : String,
 'updown_inside_5' : String,
-'score_to_par': Integer
+'score_to_par': String
 });
   GameHole.virtual('id')
     .get(function() {
@@ -90,14 +90,14 @@ Game = new Schema({
 'course_id': ObjectId,
 'game_type': String,
 'game_date': String,
-'total_score': Integer,
-'adjusted_score': Integer,
-'holes_played': Integer,
+'total_score': String,
+'adjusted_score': String,
+'holes_played': String,
 'game_completed': String,
-'total_score_to_par': Integer,
+'total_score_to_par': String,
 'average_score': String
 
-)};
+});
  Game.virtual('id')
     .get(function() {
       return this._id.toHexString();
@@ -107,9 +107,8 @@ Game = new Schema({
     */
     CourseHole = new Schema({
 	'course_id': ObjectId,
-	'hole_num' : Integer,
-	'hole_par' : Integer,
-	'green_type' : String,
+	'hole_num' : String,
+	'hole_par' : String,
 	'status' : String,
 	'activity date' : String
     });
@@ -122,13 +121,14 @@ Game = new Schema({
     */
 Course = new Schema({
 'course_name' : String,
-'number_of_holes' : Integer,
+'number_of_holes' : String,
 'course_description' : String,
 'course_location' : String,
+'green_type' : String,
 'has_pic': String,
 'pic_location': String,
 'status' : String,
-'par_total' : Integer
+'par_total' : String
 });
     Course.virtual('id')
         .get(function() {
@@ -143,15 +143,15 @@ Course = new Schema({
 
   User = new Schema({
     'email': { type: String, validate: [validatePresenceOf, 'an email is required'], index: { unique: true } },
-    'lastname' : String,
-    'firstname' : String,
+    'last_name' : String,
+    'first_name' : String,
     'displayname' : String,
     'username' : String,
-    'usertype' : String,
+    'user_type' : String,
     'phone' : String,
     'status' : String,
       'activityDate' : String,
-      'failedAttempts' : Integer,
+      'failedAttempts' : String,
       'account_lock' : String,
       'hint' : String,
     'hashed_password': String,

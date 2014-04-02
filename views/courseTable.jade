@@ -1,0 +1,18 @@
+table
+  th
+    td Name
+    td Holes
+    td Location
+    td Par Total
+    td Green Type
+    td Edit
+    td Delete
+  each course in courses
+    tr
+      td=course.course_name
+      td=course.number_of_holes
+      td=course.course_location
+      td=course.par_total
+      td=course.green_type
+      td Edit
+      td Delete

@@ -240,7 +240,14 @@ app.post('/AddCourseForm.html', function(req,res) {
 	c.par_total = total;
 c.save();    
 });
-
+//Get all courses as list
+app.get('/courselist', function(req, res) {
+res.send(Course.findOne());
+//res.render('courseList.jade', {locals: {courses: Course.find()}});
+});
+app.get('/coursetable', function(req, res) {
+res.render('courseTable.jade', {locals: {courses: Course.find()}});
+});
 app.get('/course/:id?', function(req, res) {
 });
 app.put('/course/:id?',function(req, res) {

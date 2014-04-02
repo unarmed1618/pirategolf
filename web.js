@@ -38,10 +38,10 @@ function renderJadeFile(template, options) {
   var fn = jade.compile(template, options);
   return fn(options.locals);
 }
-if(process.env.PWD == "/app"||"/Users/johndarrow/pirategolfWS/pirategolf")
-    var pg = require("pg").native;
-else
-   var pg = require("pg");
+//if(process.env.PWD == "/app"||"/Users/johndarrow/pirategolfWS/pirategolf")
+//    var pg = require("pg").native;
+//else
+//   var pg = require("pg");
 //console.log("pg built");
 var forms = require("forms");
 var holes = [1, 2, 3,4, 5, 6, 7, 8, 9, 10, 11, 12, 13,14,15,16,17,18];
@@ -216,7 +216,7 @@ res.redirect('/BannerPage.html');
 app.post('/AddCourseForm.html', function(req,res) {
     var c = new Course();
     var rp = req.body;
-    console.log(rp.course_name);
+    console.log(rp.location);
     c.course_name = rp.course_name;
     c.number_of_holes = rp.numholes;
     c.course_description = rp.description;
@@ -229,27 +229,53 @@ app.post('/AddCourseForm.html', function(req,res) {
     
     for(var i =1; i<=parseInt(rp.numholes); i++)
     {
-	console.log("In Array");
+	//console.log("In Array");
 	ch = new CourseHole();
 	ch.course_id = c.id;
 	ch.hole_num = i;
 	ch.hole_par = coursepars[i];
 	ch.save();
-	total += parseInt(coursepars[i]);
+	total = total + parseInt(coursepars[i]);
     }
 	c.par_total = total;
 c.save();    
 });
 //Get all courses as list
 app.get('/courselist', function(req, res) {
-res.send(Course.findOne());
-//res.render('courseList.jade', {locals: {courses: Course.find()}});
-});
+Course.find({}, function(err, courses){
+if(courses) {
+res.render('courseList.jade', {'locals': {'courses': courses}});
+}
+else {
+res.send('No Courses Found :(');
+}
+})});
 app.get('/coursetable', function(req, res) {
-res.render('courseTable.jade', {locals: {courses: Course.find()}});
+Course.find({}, function(err, courses){
+if(courses) {
+res.render('courseTable.jade', {'locals': {'courses': courses}});
+}
+else {
+res.send('No Courses Found :(');
+}})
 });
-app.get('/course/:id?', function(req, res) {
+//Detail form for course with hole data
+// Not working presently.
+app.get('/course/:id', function(req, res) {
+Course.findOne({'id':req.params[0]}, function(err, course){
+if(course) {
+CourseHole.find({'course_id':req.params[0]}, function(err, holes){
+if(holes)
+{res.render('courseHolesTable.jade', {'locals': {'course': course, 'holes': holes}});
+} else {
+res.send('No Holes on this Course :(');
+}
 });
+} else {
+res.send('Course Not Found :(');
+}})
+});
+//Edit and delete functions. Modify Later.
 app.put('/course/:id?',function(req, res) {
 });
 app.del('/course/:id?',function(req, res) {
@@ -283,9 +309,6 @@ app.get('/users/new', function(req, res) {
 
 app.post('/users.:format?', function(req, res) {
   var user = new User(req.body.user);
-client.query("INSERT INTO users (user_id, last_name, first_name, display_name, username, user_type, email_address, phone, activity_date) VALUES ( $1, $2, $3, $4, $5, $6, $7, NOW())", [56, user.last_name, user.first_name, user.displayname, user.username, user.usertype, user.email, user.phone ], function(err, result){
-//console.log(result.rows[0]);
-});
 
   function userSaveFailed() {
     req.flash('error', 'Account creation failed');
@@ -314,10 +337,10 @@ req.flash('info', 'Your account has been created');
 
 // Sessions                                                                   
 app.get('/sessions/new', function(req, res) {
-//  res.write(newUserJade({locals: {user: new User()}}));
-  res.render('sessions/new.jade', {
-    locals: { user: new User() }
-  });
+   res.redirect('/LoginPage.html');
+//   res.render('sessions/new.jade', {
+ //   locals: { user: new User() }
+ // });
 });
 app.post('/sessions', function(req, res) {
   User.findOne({ email: req.body.user.email }, function(err, user) {
@@ -365,7 +388,7 @@ else
 
 // Client instatiation
 //console.log("Creating client at " + conString + "...");
-var client = new pg.Client(conString);
+//var client = new pg.Client(conString);
 //console.log("Done!");
 //Forms hooks
 var fields = forms.fields, validators = forms.validators, widgets = forms.validators;

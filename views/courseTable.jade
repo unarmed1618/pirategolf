@@ -7,8 +7,9 @@ table
     td Green Type
     td Edit
     td Delete
-  each course in courses
+  each course,i in courses
     tr
+      td=(i+1)
       td=course.course_name
       td=course.number_of_holes
       td=course.course_location

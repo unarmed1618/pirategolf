@@ -63,7 +63,7 @@ GameHole = new Schema({
 'gameid' : ObjectId,
 'userid' : ObjectId,
 'holeid' : ObjectId,
-'holenum' : String,
+'holenum' : { type: String, index: true },
 'holescore' : String,
 'fairway' : String,
 'goposition' : String,
@@ -107,7 +107,7 @@ Game = new Schema({
     */
     CourseHole = new Schema({
 	'course_id': ObjectId,
-	'hole_num' : String,
+	'hole_num' : { type: String, index: true },
 	'hole_par' : String,
 	'status' : String,
 	'activity date' : String

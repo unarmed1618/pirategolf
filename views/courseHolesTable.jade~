@@ -1,0 +1,11 @@
+table
+  th
+    td Name
+    td Total Par
+    each hole in holes
+      td= "Hole # " + hole.hole_num +" par:"
+  tr
+    td= course.course_name
+    td= course.total_par
+    each hole in holes
+      td= hole.hole_par

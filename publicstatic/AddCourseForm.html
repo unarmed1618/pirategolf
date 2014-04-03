@@ -1,4 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- Example format ?textfield=Covington&textfield3=18&textfield5=Blue&textarea=Welcome+to+Covington&textfield2=Covington+Heights&select=4&select2=3&select3=3&select4=3&select5=3&select6=3&select7=3&select7=3&select7=3&select7=3&select7=3&select7=3&select8=3&select8=3&select8=3&select8=3&select8=3&select8=4&Submit=Submit -->
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
@@ -9,247 +10,198 @@
 <div align="center">
   <p>Add Course</p>
   <p>&nbsp;</p>
-  <form id="form1" name="form1" method="post" action="">
+  <form id="form1" name="form1" method="post" action="#course">
     <label>Course name
-      <input name="textfield" type="text" maxlength="255" />
+      <input name="course_name" type="text" maxlength="255" />
     </label>
     <label><br />
     </label>
     <p>
       <label>Number of holes
-      <input type="text" name="textfield3" />
+      <input name="numholes" type="text" size="3" />
       </label>
+    </p>
+    <p>Green type
+      <input type="text" name="greentype" />
     </p>
     <p>
       <label></label>
       <label>Description
-      <textarea maxlength="255" name="textarea"></textarea>
+      <textarea maxlength="255" name="description"></textarea>
       </label>
     </p>
     <p>
       <label>Location
-      <input name="textfield2" type="text" maxlength="255" />
+      <input type="text" maxlength="255" name="location" />
       </label>
     </p>
     <p>&nbsp;</p>
     <p>Hole info </p>
     <p>Hole 1 
       <label>Par
-      <select name="select">
+      <select name="hole1par">
         <option>3</option>
         <option>4</option>
         <option>5</option>
       </select>
       </label>
-      <label>Green type
-      <input name="textfield4" type="text" maxlength="20" />
+      <label></label>
+    Hole 2
+      <label>Par
+      <select name="hole2par">
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+      </select>
+      </label>
+      <label></label>
+    Hole 3
+      <label>Par
+      <select name="hole3par">
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+      </select>
       </label>
     </p>
-    <p>Hole 2
-      <label>Par
-      <select name="select2">
-        <option>3</option>
-        <option>4</option>
-        <option>5</option>
-      </select>
-      </label>
-      <label>Green type
-      <input name="textfield42" type="text" maxlength="20" />
-      </label>
-</p>
-    <p>Hole 3
-      <label>Par
-      <select name="select3">
-        <option>3</option>
-        <option>4</option>
-        <option>5</option>
-      </select>
-      </label>
-      <label>Green type
-      <input name="textfield43" type="text" maxlength="20" />
-      </label>
-</p>
     <p>Hole 4
       <label>Par
-      <select name="select4">
+      <select name="hole4par">
         <option>3</option>
         <option>4</option>
         <option>5</option>
       </select>
       </label>
-      <label>Green type
-      <input name="textfield44" type="text" maxlength="20" />
-      </label>
-</p>
-    <p>Hole 5
+    Hole 5
       <label>Par
-      <select name="select5">
+      <select name="hole5par">
         <option>3</option>
         <option>4</option>
         <option>5</option>
       </select>
       </label>
-      <label>Green type
-      <input name="textfield45" type="text" maxlength="20" />
-      </label>
-</p>
-    <p>Hole 6
+      <label></label>
+    Hole 6
       <label>Par
-      <select name="select6">
+      <select name="hole6par">
         <option>3</option>
         <option>4</option>
         <option>5</option>
       </select>
       </label>
-      <label>Green type
-      <input name="textfield46" type="text" maxlength="20" />
-      </label>
-</p>
+      <label></label>
+    </p>
     <p>Hole 7
       <label>Par
-      <select name="select7">
+      <select name="hole7par">
         <option>3</option>
         <option>4</option>
         <option>5</option>
       </select>
       </label>
-      <label>Green type
-      <input name="textfield47" type="text" maxlength="20" />
+      <label></label>
+    Hole 8
+      <label>Par
+        <select name="hole8par">
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+        </select>
       </label>
-</p>
-    <p>Hole 8
+        <label></label>
+    Hole 9
       <label>Par
-        <select name="select7">
+        <select name="hole9par">
           <option>3</option>
           <option>4</option>
           <option>5</option>
         </select>
-        </label>
-        <label>Green type
-          <input name="textfield422" type="text" maxlength="20" />
-        </label>
-    </p>
-    <p>Hole 9
-      <label>Par
-        <select name="select7">
-          <option>3</option>
-          <option>4</option>
-          <option>5</option>
-        </select>
-        </label>
-        <label>Green type
-          <input name="textfield432" type="text" maxlength="20" />
-        </label>
+      </label>
+        <label></label>
     </p>
     <p>Hole 10
       <label>Par
-        <select name="select7">
+        <select name="hole10par">
           <option>3</option>
           <option>4</option>
           <option>5</option>
         </select>
-        </label>
-        <label>Green type
-          <input name="textfield442" type="text" maxlength="20" />
-        </label>
-    </p>
-    <p>Hole 11
+      </label>
+        <label></label>
+    Hole 11
       <label>Par
-        <select name="select7">
+        <select name="hole11par">
           <option>3</option>
           <option>4</option>
           <option>5</option>
         </select>
-        </label>
-        <label>Green type
-          <input name="textfield452" type="text" maxlength="20" />
-        </label>
-    </p>
-    <p>Hole 12
+      </label>
+        <label></label>
+    Hole 12
       <label>Par
-        <select name="select7">
+        <select name="hole12par">
           <option>3</option>
           <option>4</option>
           <option>5</option>
         </select>
-        </label>
-        <label>Green type
-          <input name="textfield462" type="text" maxlength="20" />
-        </label>
-</p>
+      </label>
+        <label></label>
+    </p>
     <p>Hole 13
       <label>Par
-      <select name="select8">
+      <select name="hole13par">
         <option>3</option>
         <option>4</option>
         <option>5</option>
       </select>
       </label>
-      <label>Green type
-      <input name="textfield48" type="text" maxlength="20" />
+    Hole 14
+      <label>Par
+        <select name="hole14par">
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+        </select>
       </label>
-</p>
-    <p>Hole 14
+        <label></label>
+    Hole 15
       <label>Par
-        <select name="select8">
+        <select name="hole15par">
           <option>3</option>
           <option>4</option>
           <option>5</option>
         </select>
-        </label>
-        <label>Green type
-          <input name="textfield423" type="text" maxlength="20" />
-        </label>
-    </p>
-    <p>Hole 15
-      <label>Par
-        <select name="select8">
-          <option>3</option>
-          <option>4</option>
-          <option>5</option>
-        </select>
-        </label>
-        <label>Green type
-          <input name="textfield433" type="text" maxlength="20" />
-        </label>
+      </label>
+        <label></label>
     </p>
     <p>Hole 16
       <label>Par
-        <select name="select8">
+        <select name="hole16par">
           <option>3</option>
           <option>4</option>
           <option>5</option>
         </select>
-        </label>
-        <label>Green type
-          <input name="textfield443" type="text" maxlength="20" />
-        </label>
-    </p>
-    <p>Hole 17
+      </label>
+        <label></label>
+    Hole 17
       <label>Par
-        <select name="select8">
+        <select name="hole17par">
           <option>3</option>
           <option>4</option>
           <option>5</option>
         </select>
-        </label>
-        <label>Green type
-          <input name="textfield453" type="text" maxlength="20" />
-        </label>
-    </p>
-    <p>Hole 18
+      </label>
+        <label></label>
+    Hole 18
       <label>Par
-        <select name="select8">
+        <select name="hole18par">
           <option>3</option>
           <option>4</option>
           <option>5</option>
         </select>
-        </label>
-        <label>Green type
-          <input name="textfield463" type="text" maxlength="20" />
-        </label>
+      </label>
+        <label></label>
     </p>
-    <p>&nbsp;</p>
     <p>
       <input name="Submit" type="submit" onclick="window.alert(&quot;Course has been added&quot;);" value="Submit" />
     </p>

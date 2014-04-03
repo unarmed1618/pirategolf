@@ -1,0 +1,4 @@
+ul
+  each course in courses
+   a(href='/course/' + course.id, target="sub-main")
+    li=course.course_name

@@ -1,0 +1,17 @@
+table
+  th
+    td Course Name
+    td Location
+    td Total Par
+    td Description
+    td Edit
+    td Delete
+  each course,i in courses
+    tr
+      td=(i+1)
+      td=course.course_name
+      td=course.course_location
+      td=course.total_par
+      td=course.course_description
+      td Edit
+      td Delete

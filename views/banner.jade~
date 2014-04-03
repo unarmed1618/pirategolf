@@ -1,0 +1,28 @@
+head
+script(src='jQuery.js')
+  body
+    center
+      br
+      br
+      br
+      br
+      br
+      a(href='Landing.html', target='main'))
+      | &nbsp&nbsp
+      a(href='ManageUsers.html', target='main') Manage users
+      | &nbsp&nbsp
+      a(href='ViewStatsSelect.html', target='main') View stats
+      | &nbsp&nbsp
+      a(href='ManageCourses.html', target='main') Manage courses
+      | &nbsp&nbsp
+      a(href='ManageViewableStatsSelect.html', target='main') Manage viewable stats
+      | &nbsp&nbsp
+      a(href='vCarousel', target='main') Mobile input
+      | &nbsp&nbsp
+      a(href='EnterStatsForm.html', target='main') Enter scores
+      | &nbsp&nbsp
+      a(href='LoginPage.html', target='main') Logout
+    | &nbsp&nbsp
+    a(href='Landing.html', target='main')
+      | You are:
+      //p=userName

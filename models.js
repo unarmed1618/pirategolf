@@ -150,10 +150,10 @@ Course = new Schema({
     'user_type' : String,
     'phone' : String,
     'status' : String,
-      'activityDate' : String,
-      'failedAttempts' : String,
-      'account_lock' : String,
-      'hint' : String,
+    'activityDate' : String,
+    'failedAttempts' : String,
+    'account_lock' : String,
+    'hint' : String,
     'hashed_password': String,
     'salt': String
   });

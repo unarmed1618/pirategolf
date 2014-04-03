@@ -264,7 +264,7 @@ res.send('No Courses Found :(');
 app.get('/course/:id', function(req, res) {
 Course.findOne({'id':req.params[0]}, function(err, course){
 if(course) {
-CourseHole.find({'course_id':req.params[0]}, function(err, holes){
+CourseHole.find({'course_id':course.id}, function(err, holes){
 if(holes)
 {res.render('courseHolesTable.jade', {'locals': {'course': course, 'holes': holes}});
 } else {
@@ -303,10 +303,33 @@ app.del('/course/:id?', function(req, res) {
 // Users                                                               
 app.get('/users/new', function(req, res) {
   res.render('users/new.jade', {
-    locals: { user: new User()  }
+    locals: { user: new User(), method:"post" }
   });
 });
-
+// A list of all users
+app.get('/users', function(req,res){
+User.find({}, function(err, users) {
+    if(users) {
+	res.render('usersTable.jade', {locals: { 'users': users }});
+    }
+    else {
+	res.send("No Users Found :(");
+    }
+    });
+});
+//Edit existing
+app.get('/users/:id', function(req, res){
+User.findOne({'id': req.params[0]}, function(err, user){
+if(user)
+{
+res.render('users/new.jade', {
+    locals: { 'user': user, 'method': 'put'  }
+  });
+} else {
+res.send("User not found :(");
+}
+});
+});
 app.post('/users.:format?', function(req, res) {
   var user = new User(req.body.user);
 

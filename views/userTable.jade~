@@ -1,17 +1,19 @@
 table
   th
-    td Course Name
+    td Name
+    td Holes
     td Location
-    td Total Par
-    td Description
+    td Par Total
+    td Green Type
     td Edit
     td Delete
   each course,i in courses
     tr
       td=(i+1)
       td=course.course_name
+      td=course.number_of_holes
       td=course.course_location
-      td=course.total_par
-      td=course.course_description
+      td=course.par_total
+      td=course.green_type
       td Edit
       td Delete

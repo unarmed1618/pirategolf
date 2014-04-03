@@ -1,0 +1,23 @@
+table
+  th
+    td First Name
+    td Last Name
+    td E-Mail Address
+    td Nickname
+    td User Type
+    td Phone Number
+    td Password Hint
+    td Edit
+    td Delete
+  each user,i in users
+    tr
+      td=(i+1)
+      td=user.first_name
+      td=user.last_name
+      td=user.email
+      td=user.displayname
+      td=user.user_type
+      td=user.phone
+      td=user.hint
+      td Edit
+      td Delete
